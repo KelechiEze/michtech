@@ -41,7 +41,7 @@ export default function Hero() {
               whileTap={{ scale: 0.95 }}
               className="bg-[#c5a070] text-white px-10 py-4 text-xs font-bold tracking-[0.2em] uppercase w-fit hover:bg-[#b38f5f] transition-all shadow-lg"
             >
-              Start Playing
+              Start Learning
             </motion.button>
           </motion.div>
 

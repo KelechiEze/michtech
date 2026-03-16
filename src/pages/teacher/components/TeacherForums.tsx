@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { useTheme } from '../../../context/ThemeContext';
 import { 
   MessageSquare, 
   Users, 
@@ -76,6 +77,7 @@ const forumTopics: ForumTopic[] = [
 ];
 
 export default function TeacherForums({ onSelectThread }: TeacherForumsProps) {
+  const { theme } = useTheme();
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -86,53 +88,61 @@ export default function TeacherForums({ onSelectThread }: TeacherForumsProps) {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1 h-8 bg-[#c5a070] rounded-full" />
-            <h1 className="text-4xl font-bold text-white tracking-tighter">Teachers Forum</h1>
+            <h1 className={`text-4xl font-bold tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Teachers Forum</h1>
           </div>
-          <p className="text-sm text-gray-500 font-medium ml-4">Collaborate and share ideas with fellow educators.</p>
+          <p className={`text-sm font-medium ml-4 ${theme === 'dark' ? 'text-gray-500' : 'text-slate-500'}`}>Collaborate and share ideas with fellow educators.</p>
         </div>
         <motion.button 
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-[#c5a070] to-[#b38f5f] text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:shadow-[0_20px_40px_rgba(197,160,112,0.3)] transition-all flex items-center gap-3 shadow-xl"
+          className="bg-gradient-to-r from-[#c5a070] to-[#b38f5f] text-white px-8 py-4 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] hover:shadow-[0_20px_40px_rgba(197,160,112,0.3)] transition-all flex items-center gap-3 shadow-xl"
         >
           <Plus size={18} />
           New Discussion
         </motion.button>
       </div>
 
-      <div className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl">
-        <div className="grid grid-cols-12 px-10 py-6 bg-white/5 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+      <div className={`backdrop-blur-xl rounded-none border overflow-hidden shadow-2xl ${
+        theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white border-gray-100'
+      }`}>
+        <div className={`grid grid-cols-12 px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] border-b ${
+          theme === 'dark' ? 'bg-white/5 border-white/5 text-gray-500' : 'bg-gray-50 border-gray-100 text-slate-500'
+        }`}>
           <div className="col-span-7">Discussion Topic</div>
           <div className="col-span-2 text-center">Engagement</div>
           <div className="col-span-3 text-right">Last Activity</div>
         </div>
         
-        <div className="divide-y divide-white/5">
+        <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-gray-100'}`}>
           {forumTopics.map((topic, i) => (
             <motion.div
               key={topic.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 }}
-              whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', x: 10 }}
+              whileHover={theme === 'dark' ? { backgroundColor: 'rgba(255, 255, 255, 0.03)', x: 10 } : { backgroundColor: 'rgba(0, 0, 0, 0.01)', x: 10 }}
               onClick={() => onSelectThread(topic)}
               className="grid grid-cols-12 px-10 py-8 items-center cursor-pointer group transition-all"
             >
               <div className="col-span-7 flex gap-6">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-gray-500 group-hover:bg-[#c5a070] group-hover:text-white transition-all duration-500 shadow-lg border border-white/5 group-hover:rotate-12">
+                <div className={`w-14 h-14 rounded-none flex items-center justify-center transition-all duration-500 shadow-lg border group-hover:bg-[#c5a070] group-hover:text-white group-hover:rotate-12 ${
+                  theme === 'dark' ? 'bg-white/5 border-white/5 text-gray-500' : 'bg-gray-50 border-gray-100 text-slate-400'
+                }`}>
                   <MessageCircle size={24} />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h3 className="text-lg font-bold text-gray-200 group-hover:text-[#c5a070] transition-colors mb-2 tracking-tight">
+                  <h3 className={`text-lg font-bold transition-colors mb-2 tracking-tight group-hover:text-[#c5a070] ${
+                    theme === 'dark' ? 'text-gray-200' : 'text-slate-900'
+                  }`}>
                     {topic.title}
                   </h3>
                   <div className="flex items-center gap-4">
-                    <span className="text-[10px] text-gray-600 font-black uppercase tracking-widest">
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>
                       Category: <span className="text-[#c5a070]">{topic.category}</span>
                     </span>
-                    <div className="w-1 h-1 bg-gray-700 rounded-full" />
-                    <span className="text-[10px] text-gray-600 font-black uppercase tracking-widest">
-                      By: <span className="text-gray-400">{topic.author}</span>
+                    <div className={`w-1 h-1 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`} />
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>
+                      By: <span className={theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}>{topic.author}</span>
                     </span>
                   </div>
                 </div>
@@ -140,19 +150,23 @@ export default function TeacherForums({ onSelectThread }: TeacherForumsProps) {
               
               <div className="col-span-2 text-center">
                 <div className="flex flex-col items-center">
-                  <span className="text-3xl font-black text-white tracking-tighter group-hover:text-[#c5a070] transition-colors">{topic.replies}</span>
-                  <p className="text-[8px] text-gray-600 font-black uppercase tracking-[0.2em] mt-1">Replies</p>
+                  <span className={`text-3xl font-black tracking-tighter group-hover:text-[#c5a070] transition-colors ${
+                    theme === 'dark' ? 'text-white' : 'text-slate-900'
+                  }`}>{topic.replies}</span>
+                  <p className={`text-[8px] font-black uppercase tracking-[0.2em] mt-1 ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>Replies</p>
                 </div>
               </div>
               
               <div className="col-span-3 text-right">
-                <div className="flex items-center justify-end gap-2 text-[10px] text-gray-500 font-black uppercase tracking-widest mb-2">
+                <div className={`flex items-center justify-end gap-2 text-[10px] font-black uppercase tracking-widest mb-2 ${
+                  theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
+                }`}>
                   <Clock size={14} className="text-[#c5a070]" />
                   {topic.lastActivity}
                 </div>
                 <div className="flex items-center justify-end gap-2">
-                  <span className="text-[10px] text-gray-600 font-black uppercase tracking-widest">Active By:</span>
-                  <span className="text-[10px] text-gray-300 font-bold">{topic.author}</span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>Active By:</span>
+                  <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-slate-700'}`}>{topic.author}</span>
                 </div>
               </div>
             </motion.div>

@@ -143,10 +143,10 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
             className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
           >
             <div>
-              <h2 className={`text-4xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <h2 className={`text-4xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                 Welcome back, <span className="text-blue-400">{user.name.split(' ')[0]}</span>! 👋
               </h2>
-              <p className={`mt-1 font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-slate-500'}`}>You've completed 85% of your weekly goals. Keep it up!</p>
+              <p className={`mt-1 font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>You've completed 85% of your weekly goals. Keep it up!</p>
             </div>
             <div className={`flex items-center gap-3 px-4 py-2 rounded-none border backdrop-blur-md ${
               theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-100'
@@ -173,7 +173,7 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
+                    whileHover={theme === 'dark' ? { y: -10, rotateX: 5, rotateY: 5 } : {}}
                     className={`backdrop-blur-xl p-6 rounded-none border shadow-2xl relative overflow-hidden group cursor-default transition-colors duration-500 ${
                       theme === 'dark' ? 'bg-[#1a1d23]/60 border-white/5' : 'bg-white border-gray-100'
                     }`}
@@ -183,10 +183,10 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                       <stat.icon size={24} className="text-white" />
                     </div>
                     <p className={`text-[10px] uppercase tracking-[0.2em] font-black mb-1 ${
-                      theme === 'dark' ? 'text-gray-500' : 'text-slate-400'
+                      theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
                     }`}>{stat.label}</p>
                     <p className={`text-3xl font-bold tracking-tighter ${
-                      theme === 'dark' ? 'text-white' : 'text-slate-800'
+                      theme === 'dark' ? 'text-white' : 'text-slate-900'
                     }`}>{stat.value}</p>
                   </motion.div>
                 ))}
@@ -205,7 +205,7 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                   theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-100'
                 }`}>
                   <h3 className={`text-xl font-bold tracking-tight ${
-                    theme === 'dark' ? 'text-white' : 'text-slate-800'
+                    theme === 'dark' ? 'text-white' : 'text-slate-900'
                   }`}>Continue Learning</h3>
                   <motion.button 
                     whileHover={{ scale: 1.05 }}
@@ -229,19 +229,27 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                     >
                       <div className="flex justify-between items-center mb-3">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-white/5 rounded-none flex items-center justify-center text-gray-400 group-hover:bg-blue-500/10 group-hover:text-blue-400 transition-all duration-300 border border-white/5">
+                          <div className={`w-12 h-12 rounded-none flex items-center justify-center transition-all duration-300 border ${
+                            theme === 'dark' ? 'bg-white/5 text-gray-400 group-hover:bg-blue-500/10 group-hover:text-blue-400 border-white/5' : 'bg-gray-50 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 border-gray-100'
+                          }`}>
                             {course.hasVideo ? <PlayCircle size={24} /> : <FileText size={24} />}
                           </div>
                           <div>
-                            <h4 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{course.name}</h4>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Next: Module {i + 2}</p>
+                            <h4 className={`text-sm font-bold transition-colors ${
+                              theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'
+                            }`}>{course.name}</h4>
+                            <p className={`text-[10px] font-bold uppercase tracking-widest ${
+                              theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
+                            }`}>Next: Module {i + 2}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className="text-xs font-black text-blue-400">{course.progress}%</span>
+                          <span className={`text-xs font-black ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{course.progress}%</span>
                         </div>
                       </div>
-                      <div className="h-2.5 bg-white/5 rounded-none overflow-hidden border border-white/5">
+                      <div className={`h-2.5 rounded-none overflow-hidden border ${
+                        theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-100 border-gray-200'
+                      }`}>
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: `${course.progress}%` }}
@@ -262,28 +270,38 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-none border border-white/5 shadow-2xl overflow-hidden"
+                className={`backdrop-blur-xl rounded-none border shadow-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white border-gray-100'
+                }`}
               >
-                <div className="p-8 border-b border-white/5 bg-white/5">
-                  <h3 className="text-xl font-bold text-white tracking-tight">Recent Quizzes</h3>
+                <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5 bg-white/5' : 'border-gray-100 bg-gray-50'}`}>
+                  <h3 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Recent Quizzes</h3>
                 </div>
                 <div className="p-8 space-y-8">
                   {quizzes.map((quiz, i) => (
                     <motion.div 
                       key={i} 
-                      whileHover={{ x: 5 }}
+                      whileHover={theme === 'dark' ? { x: 5 } : {}}
                       className="flex items-start gap-5 group cursor-pointer"
                     >
-                      <div className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-none flex items-center justify-center flex-shrink-0 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                      <div className={`w-12 h-12 rounded-none flex items-center justify-center flex-shrink-0 border transition-all duration-300 ${
+                        theme === 'dark' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white' : 'bg-blue-50 text-blue-600 border-blue-100 group-hover:bg-blue-600 group-hover:text-white'
+                      }`}>
                         <FileText size={22} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-white truncate group-hover:text-blue-400 transition-colors">{quiz.title}</h4>
-                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">{quiz.course}</p>
+                        <h4 className={`text-sm font-bold truncate transition-colors ${
+                          theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'
+                        }`}>{quiz.title}</h4>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest mt-1 ${
+                          theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
+                        }`}>{quiz.course}</p>
                         <div className="flex items-center gap-4 mt-3">
-                          <span className="text-xs font-black text-emerald-400">{quiz.score}/10</span>
-                          <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-none uppercase font-black border border-emerald-500/20">{quiz.grade}</span>
-                          {quiz.voiceEnabled && <Volume2 size={14} className="text-gray-600 animate-pulse" />}
+                          <span className="text-xs font-black text-emerald-500">{quiz.score}/10</span>
+                          <span className={`text-[10px] px-2.5 py-1 rounded-none uppercase font-black border ${
+                            theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                          }`}>{quiz.grade}</span>
+                          {quiz.voiceEnabled && <Volume2 size={14} className="text-gray-400 animate-pulse" />}
                         </div>
                       </div>
                     </motion.div>
@@ -296,26 +314,30 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
-                className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-none border border-white/5 shadow-2xl overflow-hidden"
+                className={`backdrop-blur-xl rounded-none border shadow-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white border-gray-100'
+                }`}
               >
-                <div className="p-8 border-b border-white/5 bg-white/5">
-                  <h3 className="text-xl font-bold text-white tracking-tight">Forum Activity</h3>
+                <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5 bg-white/5' : 'border-gray-100 bg-gray-50'}`}>
+                  <h3 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Forum Activity</h3>
                 </div>
                 <div className="p-8 space-y-8">
                   {forumActivity.map((activity, i) => (
                     <motion.div 
                       key={i} 
-                      whileHover={{ x: 5 }}
-                      className="space-y-3 p-4 rounded-none hover:bg-white/5 transition-all cursor-pointer border border-transparent hover:border-white/5"
+                      whileHover={theme === 'dark' ? { x: 5 } : {}}
+                      className={`space-y-3 p-4 rounded-none transition-all cursor-pointer border ${
+                        theme === 'dark' ? 'hover:bg-white/5 border-transparent hover:border-white/5' : 'hover:bg-gray-50 border-transparent hover:border-gray-100'
+                      }`}
                     >
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-blue-400">{activity.user}</span>
+                        <span className="text-xs font-bold text-blue-500">{activity.user}</span>
                         <span className="text-[10px] text-gray-500 font-medium">{activity.time}</span>
                       </div>
-                      <p className="text-xs text-gray-300 italic leading-relaxed">"{activity.message}"</p>
+                      <p className={`text-xs italic leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-slate-700'}`}>"{activity.message}"</p>
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-none" />
-                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">In: {activity.topic}</p>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-gray-500' : 'text-slate-500'}`}>In: {activity.topic}</p>
                       </div>
                     </motion.div>
                   ))}

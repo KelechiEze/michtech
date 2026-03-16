@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X, GraduationCap } from 'lucide-react';
+import { Menu, X, GraduationCap, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useCart } from '../context/CartContext';
 
 const navLinks = [
   { name: 'HOME', view: 'landing' },
@@ -13,11 +14,13 @@ interface NavbarProps {
   onHomeClick?: () => void;
   onGetStartedClick?: () => void;
   onNavigate?: (view: any) => void;
+  onCartClick?: () => void;
   activeView?: string;
 }
 
-export default function Navbar({ onHomeClick, onGetStartedClick, onNavigate, activeView }: NavbarProps) {
+export default function Navbar({ onHomeClick, onGetStartedClick, onNavigate, onCartClick, activeView }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems } = useCart();
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-40">
@@ -57,6 +60,19 @@ export default function Navbar({ onHomeClick, onGetStartedClick, onNavigate, act
                 {link.name}
               </button>
             ))}
+            
+            <button 
+              onClick={onCartClick}
+              className="relative p-2 text-slate-800 hover:text-[#c5a070] transition-colors"
+            >
+              <ShoppingCart size={20} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#c5a070] text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
             <button 
               onClick={onGetStartedClick}
               className="border border-gray-300 px-6 py-3 text-xs font-bold tracking-widest text-slate-800 hover:bg-slate-50 transition-all uppercase"
@@ -66,7 +82,18 @@ export default function Navbar({ onHomeClick, onGetStartedClick, onNavigate, act
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center gap-4">
+            <button 
+              onClick={onCartClick}
+              className="relative p-2 text-slate-800"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#c5a070] text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-slate-800 p-2"

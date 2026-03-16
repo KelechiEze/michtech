@@ -13,6 +13,10 @@ const courses = [
     comments: 15,
     oldPrice: '£20.00',
     price: '£10.00',
+    description: 'A fun way for kids to learn basic math through games and interactive lessons.',
+    rating: 4.8,
+    duration: '4 weeks',
+    lessons: 12
   },
   {
     id: 2,
@@ -24,6 +28,10 @@ const courses = [
     comments: 8,
     oldPrice: '£25.00',
     price: '£15.00',
+    description: 'Discover the magic of science with safe and exciting experiments you can do at home.',
+    rating: 4.9,
+    duration: '6 weeks',
+    lessons: 18
   },
   {
     id: 3,
@@ -35,6 +43,10 @@ const courses = [
     comments: 24,
     oldPrice: '£15.00',
     price: '£5.00',
+    description: 'Improve reading skills and vocabulary through engaging stories and animated books.',
+    rating: 4.7,
+    duration: '3 weeks',
+    lessons: 9
   },
   {
     id: 4,
@@ -46,10 +58,78 @@ const courses = [
     comments: 12,
     oldPrice: '£18.00',
     price: '£12.00',
+    description: 'Unleash your child\'s creativity with fun art projects and color exploration.',
+    rating: 4.6,
+    duration: '5 weeks',
+    lessons: 15
   },
+  {
+    id: 5,
+    title: 'Coding for Juniors: Scratch',
+    instructor: 'Mr. Alex',
+    image: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=2031&auto=format&fit=crop',
+    avatar: 'https://i.pravatar.cc/150?u=alex',
+    students: 95,
+    comments: 10,
+    oldPrice: '£30.00',
+    price: '£20.00',
+    description: 'Learn the basics of programming by creating your own games and animations with Scratch.',
+    rating: 4.9,
+    duration: '8 weeks',
+    lessons: 24
+  },
+  {
+    id: 6,
+    title: 'Music & Rhythm: Piano Basics',
+    instructor: 'Miss Clara',
+    image: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?q=80&w=2070&auto=format&fit=crop',
+    avatar: 'https://i.pravatar.cc/150?u=clara',
+    students: 60,
+    comments: 5,
+    oldPrice: '£40.00',
+    price: '£30.00',
+    description: 'Start your musical journey with basic piano lessons and rhythm exercises.',
+    rating: 4.5,
+    duration: '10 weeks',
+    lessons: 20
+  },
+  {
+    id: 7,
+    title: 'Geography Explorers',
+    instructor: 'Mr. David',
+    image: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=2070&auto=format&fit=crop',
+    avatar: 'https://i.pravatar.cc/150?u=david',
+    students: 110,
+    comments: 14,
+    oldPrice: '£22.00',
+    price: '£14.00',
+    description: 'Travel the world from your home and learn about different cultures and landmarks.',
+    rating: 4.7,
+    duration: '4 weeks',
+    lessons: 12
+  },
+  {
+    id: 8,
+    title: 'Space & Planets: Astronomy',
+    instructor: 'Dr. Stella',
+    image: 'https://images.unsplash.com/photo-1454789548928-9efd52dc4031?q=80&w=2080&auto=format&fit=crop',
+    avatar: 'https://i.pravatar.cc/150?u=stella',
+    students: 140,
+    comments: 18,
+    oldPrice: '£28.00',
+    price: '£18.00',
+    description: 'Explore the wonders of the universe, from our solar system to distant galaxies.',
+    rating: 4.9,
+    duration: '6 weeks',
+    lessons: 18
+  }
 ];
 
-export default function PopularCourses() {
+interface PopularCoursesProps {
+  onCourseClick?: (course: any) => void;
+}
+
+export default function PopularCourses({ onCourseClick }: PopularCoursesProps) {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,7 +153,8 @@ export default function PopularCourses() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+              onClick={() => onCourseClick && onCourseClick(course)}
+              className="group bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer"
             >
               {/* Image Container */}
               <div className="relative h-56 overflow-hidden">
@@ -90,7 +171,7 @@ export default function PopularCourses() {
                     <img 
                       src={course.avatar} 
                       alt={course.instructor} 
-                      className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md"
+                      className="w-12 h-12 border-2 border-white object-cover shadow-md"
                       referrerPolicy="no-referrer"
                     />
                   </div>

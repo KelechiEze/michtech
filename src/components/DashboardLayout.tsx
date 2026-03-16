@@ -83,12 +83,14 @@ export default function DashboardLayout({
       <aside className={`w-72 backdrop-blur-xl border-r flex flex-col flex-shrink-0 z-20 relative transition-colors duration-500 ${
         theme === 'dark' 
           ? 'bg-[#1a1d23]/80 border-white/5' 
-          : 'bg-white/80 border-gray-200 shadow-xl'
+          : 'bg-white border-gray-200 shadow-xl'
       }`}>
         <div className="p-8 flex flex-col items-center">
           <motion.div 
-            whileHover={{ scale: 1.05, rotateY: 10 }}
-            className="w-24 h-24 rounded-none overflow-hidden border-2 border-white/10 mb-4 shadow-2xl relative group"
+            whileHover={theme === 'dark' ? { scale: 1.05, rotateY: 10 } : {}}
+            className={`w-24 h-24 rounded-none overflow-hidden border-2 mb-4 shadow-2xl relative group ${
+              theme === 'dark' ? 'border-white/10' : 'border-gray-100'
+            }`}
           >
             <img 
               src={user.avatar} 
@@ -96,21 +98,23 @@ export default function DashboardLayout({
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
-              <span className="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
-            </div>
+            {theme === 'dark' && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                <span className="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+              </div>
+            )}
           </motion.div>
           <motion.h3 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`text-xl font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}
+            className={`text-xl font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}
           >
             {user.name}
           </motion.h3>
           <motion.span 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
-            className={`text-[10px] uppercase tracking-[0.2em] mt-1 font-bold ${theme === 'dark' ? 'text-gray-400' : 'text-slate-500'}`}
+            className={`text-[10px] uppercase tracking-[0.2em] mt-1 font-bold ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}
           >
             {user.role}
           </motion.span>
@@ -133,16 +137,16 @@ export default function DashboardLayout({
                         expandedMenus.includes(item.name.toLowerCase()) 
                           ? theme === 'dark' 
                             ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]' 
-                            : 'bg-blue-50 text-blue-600 shadow-sm'
+                            : 'bg-blue-600 text-white shadow-sm'
                           : theme === 'dark'
                             ? 'text-gray-400 hover:text-white hover:bg-white/5'
-                            : 'text-slate-600 hover:text-slate-900 hover:bg-gray-100'
+                            : 'text-slate-700 hover:bg-gray-100'
                       }`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`p-2 rounded-none ${
                           expandedMenus.includes(item.name.toLowerCase()) 
-                            ? theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'
+                            ? theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-white/20 text-white'
                             : theme === 'dark' ? 'bg-white/5' : 'bg-gray-100'
                         }`}>
                           <item.icon size={18} />
@@ -172,8 +176,8 @@ export default function DashboardLayout({
                                 onClick={() => setActiveView(sub.view)}
                                 className={`w-full text-left px-4 py-2 text-xs font-medium transition-all duration-200 rounded-none ${
                                   activeView === sub.view
-                                    ? theme === 'dark' ? 'text-blue-400 bg-blue-400/5' : 'text-blue-600 bg-blue-50'
-                                    : theme === 'dark' ? 'text-gray-500 hover:text-gray-300 hover:bg-white/5' : 'text-slate-500 hover:text-slate-800 hover:bg-gray-50'
+                                    ? theme === 'dark' ? 'text-blue-400 bg-blue-400/5' : 'text-blue-700 bg-blue-50'
+                                    : theme === 'dark' ? 'text-gray-500 hover:text-gray-300 hover:bg-white/5' : 'text-slate-600 hover:bg-gray-50'
                                 }`}
                               >
                                 {sub.name}
@@ -190,7 +194,7 @@ export default function DashboardLayout({
                     className={`w-full flex items-center gap-4 px-4 py-3 rounded-none text-sm font-medium transition-all duration-300 ${
                       activeView === item.view 
                         ? 'bg-blue-600 text-white shadow-[0_10px_20px_rgba(37,99,235,0.3)]' 
-                        : theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-white/5' : 'text-slate-600 hover:text-slate-900 hover:bg-gray-100'
+                        : theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-white/5' : 'text-slate-700 hover:bg-gray-100'
                     }`}
                   >
                     <div className={`p-2 rounded-none ${activeView === item.view ? 'bg-white/20' : theme === 'dark' ? 'bg-white/5' : 'bg-gray-100'}`}>
@@ -204,12 +208,14 @@ export default function DashboardLayout({
           </ul>
         </nav>
 
-        <div className="p-6 border-t border-white/5">
+        <div className={`p-6 border-t ${theme === 'dark' ? 'border-white/5' : 'border-gray-100'}`}>
           <button 
             onClick={onLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 text-gray-500 hover:text-red-400 hover:bg-red-400/5 rounded-none text-sm font-medium transition-all duration-300"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-none text-sm font-medium transition-all duration-300 ${
+              theme === 'dark' ? 'text-gray-500 hover:text-red-400 hover:bg-red-400/5' : 'text-slate-600 hover:text-red-600 hover:bg-red-50'
+            }`}
           >
-            <div className="p-2 bg-white/5 rounded-none">
+            <div className={`p-2 rounded-none ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-100'}`}>
               <LogOut size={18} />
             </div>
             Logout
@@ -221,11 +227,11 @@ export default function DashboardLayout({
       <div className="flex-1 flex flex-col overflow-hidden relative z-10">
         {/* Top Header */}
         <header className={`h-20 backdrop-blur-md border-b flex items-center justify-between px-8 z-40 transition-colors duration-500 ${
-          theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white/70 border-gray-200'
+          theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white border-gray-200 shadow-sm'
         }`}>
           <div className="flex items-center gap-12">
             <motion.div 
-              whileHover={{ scale: 1.02 }}
+              whileHover={theme === 'dark' ? { scale: 1.02 } : {}}
               whileTap={{ scale: 0.98 }}
               className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-none cursor-pointer shadow-lg shadow-blue-600/20"
               onClick={() => setActiveView('dashboard')}
@@ -239,11 +245,11 @@ export default function DashboardLayout({
                 <button 
                   key={item} 
                   className={`text-sm font-semibold transition-colors flex items-center gap-1.5 group ${
-                    theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'
+                    theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-slate-700 hover:text-slate-900'
                   }`}
                 >
                   {item}
-                  <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                  <ChevronDown size={14} className={theme === 'dark' ? "group-hover:translate-y-0.5 transition-transform" : ""} />
                 </button>
               ))}
             </nav>
@@ -274,7 +280,7 @@ export default function DashboardLayout({
                     : 'bg-gray-100 hover:bg-gray-200 border-gray-200'
                 }`}
               >
-                <Bell size={20} className={theme === 'dark' ? 'text-gray-300' : 'text-slate-600'} />
+                <Bell size={20} className={theme === 'dark' ? 'text-gray-300' : 'text-slate-700'} />
                 {notifications.some(n => n.unread) && (
                   <span className="absolute top-2 right-2 bg-red-500 w-2 h-2 rounded-none shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
                 )}
@@ -293,7 +299,7 @@ export default function DashboardLayout({
                     <div className={`p-5 border-b flex justify-between items-center ${
                       theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-100'
                     }`}>
-                      <h3 className={`text-xs font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-gray-400' : 'text-slate-500'}`}>Notifications</h3>
+                      <h3 className={`text-xs font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>Notifications</h3>
                       <button className="text-[10px] text-blue-400 font-bold uppercase hover:text-blue-300 transition-colors">Mark all read</button>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
@@ -303,26 +309,26 @@ export default function DashboardLayout({
                           className={`p-5 border-b transition-all cursor-pointer group ${
                             theme === 'dark' 
                               ? `border-white/5 hover:bg-white/5 ${notification.unread ? 'bg-blue-500/5' : ''}` 
-                              : `border-gray-100 hover:bg-gray-50 ${notification.unread ? 'bg-blue-50/50' : ''}`
+                              : `border-gray-100 hover:bg-gray-50 ${notification.unread ? 'bg-blue-50' : ''}`
                           }`}
                         >
                           <div className="flex justify-between items-start mb-2">
-                            <h4 className={`text-sm font-semibold transition-colors group-hover:text-blue-400 ${
-                              theme === 'dark' ? 'text-white' : 'text-slate-800'
+                            <h4 className={`text-sm font-semibold transition-colors ${
+                              theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-slate-900'
                             }`}>{notification.title}</h4>
                             <span className="text-[10px] text-gray-500 font-medium">{notification.time}</span>
                           </div>
-                          <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-gray-400' : 'text-slate-500'}`}>{notification.message}</p>
+                          <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-gray-400' : 'text-slate-700'}`}>{notification.message}</p>
                         </div>
                       )) : (
-                        <div className={`p-10 text-center italic text-sm ${theme === 'dark' ? 'text-gray-500' : 'text-slate-400'}`}>No notifications yet</div>
+                        <div className={`p-10 text-center italic text-sm ${theme === 'dark' ? 'text-gray-500' : 'text-slate-600'}`}>No notifications yet</div>
                       )}
                     </div>
                     <div className={`p-4 text-center border-t ${
                       theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-100'
                     }`}>
                       <button className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
-                        theme === 'dark' ? 'text-gray-500 hover:text-white' : 'text-slate-400 hover:text-slate-900'
+                        theme === 'dark' ? 'text-gray-500 hover:text-white' : 'text-slate-600 hover:text-slate-900'
                       }`}>View All Notifications</button>
                     </div>
                   </motion.div>
@@ -331,22 +337,22 @@ export default function DashboardLayout({
             </div>
 
             <motion.div 
-              whileHover={{ x: -5 }}
+              whileHover={theme === 'dark' ? { x: -5 } : {}}
               className={`flex items-center gap-4 pl-8 border-l cursor-pointer group ${
                 theme === 'dark' ? 'border-white/5' : 'border-gray-200'
               }`}
               onClick={() => setActiveView('account')}
             >
               <div className="text-right hidden sm:block">
-                <p className={`text-sm font-bold transition-colors group-hover:text-blue-400 ${
-                  theme === 'dark' ? 'text-white' : 'text-slate-800'
+                <p className={`text-sm font-bold transition-colors ${
+                  theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-slate-900'
                 }`}>{user.name}</p>
                 <p className={`text-[10px] font-bold uppercase tracking-widest ${
-                  theme === 'dark' ? 'text-gray-500' : 'text-slate-400'
+                  theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
                 }`}>{user.role}</p>
               </div>
-              <div className={`w-10 h-10 rounded-none overflow-hidden border shadow-lg transition-colors group-hover:border-blue-500/50 ${
-                theme === 'dark' ? 'border-white/10' : 'border-gray-200'
+              <div className={`w-10 h-10 rounded-none overflow-hidden border shadow-lg transition-colors ${
+                theme === 'dark' ? 'border-white/10 group-hover:border-blue-500/50' : 'border-gray-200'
               }`}>
                 <img 
                   src={user.avatar} 

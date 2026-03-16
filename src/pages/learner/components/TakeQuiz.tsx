@@ -15,6 +15,7 @@ import {
   Volume2,
   X
 } from 'lucide-react';
+import { useTheme } from '../../../context/ThemeContext';
 
 interface Question {
   id: number;
@@ -144,6 +145,7 @@ const getQuestionsForCourse = (courseId: number): Question[] => {
 };
 
 export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
+  const { theme } = useTheme();
   const questions = getQuestionsForCourse(course?.id || 1);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -220,15 +222,23 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
             whileHover={{ scale: 1.1, x: -5 }}
             whileTap={{ scale: 0.9 }}
             onClick={onBack}
-            className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-400 transition-all shadow-xl backdrop-blur-xl"
+            className={`w-12 h-12 border rounded-2xl flex items-center justify-center transition-all shadow-xl backdrop-blur-xl ${
+              theme === 'dark'
+                ? 'bg-white/5 border-white/10 text-gray-400 hover:text-blue-400 hover:border-blue-400'
+                : 'bg-gray-100 border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-600'
+            }`}
           >
             <ArrowLeft size={24} />
           </motion.button>
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tighter mb-1">Take Quiz</h1>
+            <h1 className={`text-3xl font-black tracking-tighter mb-1 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>Take Quiz</h1>
             <div className="flex items-center gap-3">
               <div className="w-1 h-4 bg-blue-600 rounded-full" />
-              <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">
+              <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
+              }`}>
                 Course: <span className="text-blue-500">{course?.title || 'Basics of HTML'}</span>
               </p>
             </div>
@@ -243,7 +253,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
               className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all shadow-xl border ${
                 isSpeaking || isPaused 
                   ? 'bg-blue-600 border-blue-500 text-white' 
-                  : 'bg-white/5 border-white/10 text-blue-400 hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'bg-white/5 border-white/10 text-blue-400 hover:bg-white/10'
+                    : 'bg-white border-gray-200 text-blue-600 hover:bg-gray-50'
               }`}
             >
               <Volume2 size={18} className={isSpeaking ? 'animate-bounce' : ''} />
@@ -260,7 +272,11 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                   setIsSpeaking(false);
                   setIsPaused(false);
                 }}
-                className="w-10 h-10 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500/20 transition-all"
+                className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-all ${
+                  theme === 'dark'
+                    ? 'bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20'
+                    : 'bg-red-50 border-red-100 text-red-600 hover:bg-red-100'
+                }`}
                 title="Stop Narrator"
               >
                 <X size={18} />
@@ -277,9 +293,15 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-[3rem] border border-white/5 overflow-hidden shadow-2xl relative"
+            className={`backdrop-blur-xl border overflow-hidden shadow-2xl relative ${
+              theme === 'dark'
+                ? 'bg-[#1a1d23]/40 border-white/5'
+                : 'bg-white border-gray-200'
+            }`}
           >
-            <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
+            <div className={`absolute top-0 left-0 w-full h-1 ${
+              theme === 'dark' ? 'bg-white/5' : 'bg-gray-100'
+            }`}>
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
@@ -290,11 +312,15 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
             <div className="p-12">
               <div className="flex justify-between items-center mb-12">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">
+                  <span className={`text-[10px] font-black uppercase tracking-[0.3em] mb-2 ${
+                    theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                  }`}>
                     Progress
                   </span>
-                  <span className="text-2xl font-black text-white tracking-tighter">
-                    {currentQuestion + 1} <span className="text-gray-600 text-lg">/ {questions.length}</span>
+                  <span className={`text-2xl font-black tracking-tighter ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {currentQuestion + 1} <span className={`${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'} text-lg`}>/ {questions.length}</span>
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -304,9 +330,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                       initial={false}
                       animate={{ 
                         width: i === currentQuestion ? 32 : 12,
-                        backgroundColor: i === currentQuestion ? '#2563eb' : i < currentQuestion ? '#10b981' : 'rgba(255,255,255,0.05)'
+                        backgroundColor: i === currentQuestion ? '#2563eb' : i < currentQuestion ? '#10b981' : theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
                       }}
-                      className="h-2 rounded-full transition-all duration-500"
+                      className="h-2 transition-all duration-500"
                     />
                   ))}
                 </div>
@@ -316,7 +342,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                 key={currentQuestion}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-3xl font-bold text-gray-100 mb-12 leading-tight tracking-tight"
+                className={`text-3xl font-bold mb-12 leading-tight tracking-tight ${
+                  theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+                }`}
               >
                 {questions[currentQuestion].text}
               </motion.h2>
@@ -325,28 +353,40 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                 {questions[currentQuestion].options.map((option, index) => (
                   <motion.button
                     key={index}
-                    whileHover={{ scale: 1.02, y: -4 }}
+                    whileHover={theme === 'dark' ? { scale: 1.02, y: -4 } : {}}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedOption(index)}
-                    className={`text-left p-8 rounded-[2rem] border-2 transition-all flex items-center gap-6 relative overflow-hidden group ${
+                    className={`text-left p-8 border-2 transition-all flex items-center gap-6 relative overflow-hidden group ${
                       selectedOption === index 
-                        ? 'border-blue-600 bg-blue-600/10 shadow-[0_20px_40px_rgba(37,99,235,0.15)]' 
-                        : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/10'
+                        ? theme === 'dark'
+                          ? 'border-blue-600 bg-blue-600/10 shadow-[0_20px_40px_rgba(37,99,235,0.15)]' 
+                          : 'border-blue-600 bg-blue-50 shadow-[0_20px_40px_rgba(37,99,235,0.1)]'
+                        : theme === 'dark'
+                          ? 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/10'
+                          : 'border-gray-100 bg-gray-50 hover:bg-gray-100'
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-2xl border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
                       selectedOption === index 
                         ? 'border-blue-600 bg-blue-600 rotate-0' 
-                        : 'border-white/10 bg-white/5 rotate-45 group-hover:rotate-0'
+                        : theme === 'dark'
+                          ? 'border-white/10 bg-white/5 rotate-45 group-hover:rotate-0'
+                          : 'border-gray-200 bg-white rotate-45 group-hover:rotate-0'
                     }`}>
                       {selectedOption === index ? (
                         <CheckCircle2 size={20} className="text-white" />
                       ) : (
-                        <span className="text-xs font-black text-gray-600 group-hover:text-blue-400">{index + 1}</span>
+                        <span className={`text-xs font-black ${
+                          theme === 'dark' ? 'text-gray-600 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'
+                        }`}>{index + 1}</span>
                       )}
                     </div>
                     <span className={`text-lg font-bold transition-colors ${
-                      selectedOption === index ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
+                      selectedOption === index 
+                        ? 'text-white' 
+                        : theme === 'dark'
+                          ? 'text-gray-400 group-hover:text-gray-200'
+                          : 'text-gray-600 group-hover:text-gray-900'
                     }`}>
                       {option}
                     </span>
@@ -362,7 +402,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
               </div>
             </div>
 
-            <div className="p-10 bg-white/5 border-t border-white/5 flex justify-end">
+            <div className={`p-10 border-t ${
+              theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-100'
+            } flex justify-end`}>
               <motion.button
                 whileHover={selectedOption !== null ? { scale: 1.05, y: -2 } : {}}
                 whileTap={selectedOption !== null ? { scale: 0.95 } : {}}
@@ -370,7 +412,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                 onClick={handleNext}
                 className={`flex items-center gap-4 px-12 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-2xl ${
                   selectedOption === null 
-                    ? 'bg-white/5 text-gray-600 cursor-not-allowed border border-white/5' 
+                    ? theme === 'dark'
+                      ? 'bg-white/5 text-gray-600 cursor-not-allowed border border-white/5' 
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
                     : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-[0_20px_40px_rgba(37,99,235,0.3)]'
                 }`}
               >
@@ -384,7 +428,9 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
             key="result"
             initial={{ opacity: 0, scale: 0.9, rotateY: 45 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            className="bg-[#1a1d23]/60 backdrop-blur-2xl rounded-[4rem] border border-white/10 overflow-hidden p-16 text-center shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative"
+            className={`backdrop-blur-2xl border overflow-hidden p-16 text-center shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative ${
+              theme === 'dark' ? 'bg-[#1a1d23]/60 border-white/10' : 'bg-white border-gray-200'
+            }`}
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full -mt-48" />
             
@@ -403,17 +449,23 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
               transition={{ delay: 0.4 }}
               className="relative z-10"
             >
-              <h2 className="text-5xl font-black text-white mb-4 tracking-tighter">Quiz Completed!</h2>
-              <p className="text-gray-500 mb-12 font-medium text-lg">Incredible performance! You've mastered this lesson.</p>
+              <h2 className={`text-5xl font-black mb-4 tracking-tighter ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>Quiz Completed!</h2>
+              <p className={`mb-12 font-medium text-lg ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
+              }`}>Incredible performance! You've mastered this lesson.</p>
               
               <div className="flex justify-center gap-16 mb-16">
                 <div className="flex flex-col items-center">
-                  <div className="text-5xl font-black text-white tracking-tighter mb-2 flex items-baseline gap-1">
-                    {score} <span className="text-gray-600 text-2xl">/ {questions.length}</span>
+                  <div className={`text-5xl font-black tracking-tighter mb-2 flex items-baseline gap-1 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {score} <span className={`${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'} text-2xl`}>/ {questions.length}</span>
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Correct Answers</span>
                 </div>
-                <div className="w-px h-16 bg-white/10" />
+                <div className={`w-px h-16 ${theme === 'dark' ? 'bg-white/10' : 'bg-gray-200'}`} />
                 <div className="flex flex-col items-center">
                   <div className="text-5xl font-black text-blue-500 tracking-tighter mb-2">
                     {Math.round((score/questions.length)*100)}%
@@ -427,7 +479,11 @@ export default function TakeQuiz({ course, onBack }: TakeQuizProps) {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleRestart}
-                  className="bg-white/5 border border-white/10 text-gray-300 px-12 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all"
+                  className={`border px-12 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+                    theme === 'dark'
+                      ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                      : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                  }`}
                 >
                   Retake Quiz
                 </motion.button>

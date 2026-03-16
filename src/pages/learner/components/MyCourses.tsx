@@ -15,6 +15,7 @@ import {
   FlaskConical,
   BookOpen
 } from 'lucide-react';
+import { useTheme } from '../../../context/ThemeContext';
 
 interface Course {
   id: number;
@@ -69,16 +70,17 @@ const myCourses: Course[] = [
 ];
 
 export default function MyCourses({ onSelectCourse }: MyCoursesProps) {
+  const { theme } = useTheme();
   return (
     <div className="space-y-10 pb-12">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
       >
-        <h1 className="text-4xl font-bold text-white tracking-tight">
+        <h1 className={`text-4xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
           My <span className="text-emerald-400">Courses</span>
         </h1>
-        <p className="text-gray-400 mt-2 font-medium">Manage and track your learning progress across all enrolled lessons.</p>
+        <p className={`mt-2 font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>Manage and track your learning progress across all enrolled lessons.</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -88,9 +90,11 @@ export default function MyCourses({ onSelectCourse }: MyCoursesProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -12, rotateX: 2, rotateY: 2 }}
+            whileHover={theme === 'dark' ? { y: -12, rotateX: 2, rotateY: 2 } : {}}
             onClick={() => onSelectCourse(course)}
-            className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-[2rem] border border-white/5 overflow-hidden flex flex-col cursor-pointer group shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500"
+            className={`backdrop-blur-xl rounded-none border overflow-hidden flex flex-col cursor-pointer group shadow-2xl transition-all duration-500 ${
+              theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5 hover:shadow-emerald-500/10' : 'bg-white border-gray-100 hover:shadow-xl'
+            }`}
           >
             <div className={`h-44 ${course.color} flex items-center justify-center relative overflow-hidden`}>
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
@@ -111,31 +115,43 @@ export default function MyCourses({ onSelectCourse }: MyCoursesProps) {
             </div>
             
             <div className="p-8 flex-1 flex flex-col">
-              <h3 className="text-xl font-bold text-white mb-6 group-hover:text-emerald-400 transition-colors tracking-tight">
+              <h3 className={`text-xl font-bold mb-6 transition-colors tracking-tight ${
+                theme === 'dark' ? 'text-white group-hover:text-emerald-400' : 'text-slate-900 group-hover:text-emerald-600'
+              }`}>
                 {course.title}
               </h3>
               
               <div className="space-y-3 mb-8">
-                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                <div className={`flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] ${
+                  theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
+                }`}>
                   <span>Progress</span>
                   <span className="text-emerald-400">{course.progress}%</span>
                 </div>
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div className={`w-full h-2 rounded-none overflow-hidden border ${
+                  theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-gray-100 border-gray-200'
+                }`}>
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${course.progress}%` }}
                     transition={{ duration: 1.5, delay: 0.5 + (i * 0.1) }}
-                    className="h-full bg-gradient-to-r from-emerald-600 to-teal-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                    className="h-full bg-gradient-to-r from-emerald-600 to-teal-400 rounded-none shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-white/5">
+              <div className={`flex items-center justify-between pt-6 border-t ${
+                theme === 'dark' ? 'border-white/5' : 'border-gray-100'
+              }`}>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <div className={`w-6 h-6 rounded-none flex items-center justify-center border ${
+                    theme === 'dark' ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-emerald-50 border-emerald-100'
+                  }`}>
                     <CheckCircle2 size={12} className="text-emerald-400" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Active</span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${
+                    theme === 'dark' ? 'text-gray-500' : 'text-slate-500'
+                  }`}>Active</span>
                 </div>
                 <motion.button 
                   whileHover={{ x: 5 }}

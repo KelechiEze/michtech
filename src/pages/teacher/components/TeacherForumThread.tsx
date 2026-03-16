@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTheme } from '../../../context/ThemeContext';
 import { 
   MessageSquare, 
   Users, 
@@ -56,6 +57,7 @@ const initialReplies: ReplyItem[] = [
 ];
 
 export default function TeacherForumThread({ topic, onBack }: TeacherForumThreadProps) {
+  const { theme } = useTheme();
   const [replies, setReplies] = useState<ReplyItem[]>(initialReplies);
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<ReplyItem | null>(null);
@@ -89,19 +91,21 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
             whileHover={{ scale: 1.1, x: -5 }}
             whileTap={{ scale: 0.9 }}
             onClick={onBack}
-            className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#c5a070] hover:border-[#c5a070] transition-all shadow-xl backdrop-blur-xl"
+            className={`w-12 h-12 border rounded-lg flex items-center justify-center transition-all shadow-xl backdrop-blur-xl ${
+              theme === 'dark' ? 'bg-white/5 border-white/10 text-gray-400 hover:text-[#c5a070] hover:border-[#c5a070]' : 'bg-white border-gray-200 text-slate-400 hover:text-[#c5a070] hover:border-[#c5a070]'
+            }`}
           >
             <ArrowLeft size={24} />
           </motion.button>
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tighter mb-1">{topic.title}</h1>
+            <h1 className={`text-3xl font-black tracking-tighter mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{topic.title}</h1>
             <div className="flex items-center gap-4">
-              <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">
+              <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${theme === 'dark' ? 'text-gray-500' : 'text-slate-500'}`}>
                 Category: <span className="text-[#c5a070]">{topic.category}</span>
               </span>
-              <div className="w-1 h-1 bg-gray-700 rounded-full" />
-              <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">
-                By: <span className="text-gray-300">{topic.author}</span>
+              <div className={`w-1 h-1 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`} />
+              <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${theme === 'dark' ? 'text-gray-500' : 'text-slate-500'}`}>
+                By: <span className={theme === 'dark' ? 'text-gray-300' : 'text-slate-600'}>{topic.author}</span>
               </span>
             </div>
           </div>
@@ -116,39 +120,41 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-[#1a1d23]/40 backdrop-blur-xl rounded-[2rem] border border-white/5 overflow-hidden shadow-2xl group"
+              className={`backdrop-blur-xl rounded-none border overflow-hidden shadow-2xl group ${
+                theme === 'dark' ? 'bg-[#1a1d23]/40 border-white/5' : 'bg-white border-gray-100'
+              }`}
             >
               <div className="p-8 flex gap-8">
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative">
-                    <div className="absolute -inset-1 bg-gradient-to-tr from-[#c5a070] to-[#b38f5f] rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity" />
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-[#c5a070] to-[#b38f5f] rounded-lg blur opacity-25 group-hover:opacity-50 transition-opacity" />
                     <img 
                       src={`https://i.pravatar.cc/150?u=${reply.user}`} 
                       alt={reply.user} 
-                      className="w-16 h-16 rounded-2xl relative border border-white/10 object-cover"
+                      className="w-16 h-16 rounded-lg relative border border-white/10 object-cover"
                       referrerPolicy="no-referrer"
                     />
                   </div>
-                  <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full ${
-                    reply.role === 'Teacher' ? 'bg-[#c5a070]/20 text-[#c5a070] border border-[#c5a070]/20' : 'bg-white/5 text-gray-500 border border-white/5'
+                  <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-none ${
+                    reply.role === 'Teacher' ? 'bg-[#c5a070]/20 text-[#c5a070] border border-[#c5a070]/20' : theme === 'dark' ? 'bg-white/5 text-gray-500 border border-white/5' : 'bg-gray-50 text-slate-500 border border-gray-100'
                   }`}>
                     {reply.role}
                   </span>
                 </div>
                 
                 <div className="flex-1">
-                  <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                  <div className={`flex justify-between items-center mb-6 border-b pb-4 ${theme === 'dark' ? 'border-white/5' : 'border-gray-100'}`}>
                     <div className="flex items-center gap-3">
                       <h4 className="text-base font-bold text-[#c5a070] hover:text-[#b38f5f] transition-colors cursor-pointer tracking-tight">{reply.user}</h4>
                       {reply.replyTo && (
-                        <span className="text-[10px] text-gray-600 font-black uppercase tracking-widest flex items-center gap-2">
-                          <Reply size={12} className="text-gray-700" />
-                          replied to <span className="text-gray-400">{reply.replyTo}</span>
+                        <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>
+                          <Reply size={12} className={theme === 'dark' ? 'text-gray-700' : 'text-slate-400'} />
+                          replied to <span className={theme === 'dark' ? 'text-gray-400' : 'text-slate-700'}>{reply.replyTo}</span>
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2 text-[10px] text-gray-600 font-black uppercase tracking-widest">
+                      <div className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-gray-600' : 'text-slate-500'}`}>
                         <Clock size={14} className="text-[#c5a070]" />
                         {reply.time}
                       </div>
@@ -165,7 +171,7 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
                       </motion.button>
                     </div>
                   </div>
-                  <p className="text-gray-400 leading-relaxed text-base font-medium">
+                  <p className={`leading-relaxed text-base font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>
                     {reply.message}
                   </p>
                 </div>
@@ -178,14 +184,16 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#1a1d23]/60 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-10 shadow-2xl relative overflow-hidden"
+        className={`backdrop-blur-2xl rounded-none border p-10 shadow-2xl relative overflow-hidden ${
+          theme === 'dark' ? 'bg-[#1a1d23]/60 border-white/10' : 'bg-white border-gray-100'
+        }`}
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#c5a070]/5 blur-[100px] rounded-full -mr-32 -mt-32" />
         
         <div className="flex justify-between items-center mb-8 relative z-10">
           <div className="flex items-center gap-3">
             <div className="w-1 h-6 bg-[#c5a070] rounded-full" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+            <h3 className={`text-[10px] font-black uppercase tracking-[0.3em] ${theme === 'dark' ? 'text-gray-500' : 'text-slate-500'}`}>
               {replyTo ? `Replying to ${replyTo.user}` : 'Post a Reply'}
             </h3>
           </div>
@@ -206,7 +214,9 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
             id="teacher-reply-textarea"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="w-full h-40 bg-white/5 border border-white/10 rounded-3xl p-6 text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-4 focus:ring-[#c5a070]/20 focus:border-[#c5a070]/50 transition-all resize-none text-base font-medium"
+            className={`w-full h-40 backdrop-blur-xl border rounded-none p-6 outline-none focus:ring-4 focus:ring-[#c5a070]/20 focus:border-[#c5a070]/50 transition-all resize-none text-base font-medium ${
+              theme === 'dark' ? 'bg-white/5 border-white/10 text-gray-200 placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-slate-900 placeholder-slate-400'
+            }`}
             placeholder={replyTo ? `Write your reply to ${replyTo.user}...` : "Share your educational insights..."}
           ></textarea>
           <div className="flex justify-end">
@@ -214,7 +224,7 @@ export default function TeacherForumThread({ topic, onBack }: TeacherForumThread
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={handlePostReply}
-              className="bg-gradient-to-r from-[#c5a070] to-[#b38f5f] text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:shadow-[0_20px_40px_rgba(197,160,112,0.3)] transition-all flex items-center gap-3 shadow-xl"
+              className="bg-gradient-to-r from-[#c5a070] to-[#b38f5f] text-white px-10 py-4 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] hover:shadow-[0_20px_40px_rgba(197,160,112,0.3)] transition-all flex items-center gap-3 shadow-xl"
             >
               <Send size={18} />
               Post Reply

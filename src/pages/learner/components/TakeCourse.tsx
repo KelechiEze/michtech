@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTheme } from '../../../context/ThemeContext';
 import { 
   GraduationCap, 
   ChevronDown, 
@@ -196,6 +197,7 @@ const getChaptersForCourse = (courseId: number): Chapter[] => {
 };
 
 export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCourseProps) {
+  const { theme } = useTheme();
   const chaptersData = getChaptersForCourse(course.id);
   const [openChapters, setOpenChapters] = useState<number[]>([chaptersData[0]?.id]);
   const [watchedLessons, setWatchedLessons] = useState<number[]>([]);
@@ -269,18 +271,18 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
               initial={{ scale: 0.9, y: 40, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 40, opacity: 0 }}
-              className="bg-[#1a1d23] rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] w-full max-w-5xl overflow-hidden border border-white/10"
+              className={`${theme === 'light' ? 'bg-white' : 'bg-[#1a1d23]'} rounded-none shadow-[0_0_100px_rgba(0,0,0,0.5)] w-full max-w-5xl overflow-hidden border ${theme === 'light' ? 'border-gray-200' : 'border-white/10'}`}
             >
-              <div className="p-8 bg-white/5 border-b border-white/5 flex justify-between items-center">
+              <div className={`p-8 ${theme === 'light' ? 'bg-gray-50 border-b border-gray-200' : 'bg-white/5 border-b border-white/5'} flex justify-between items-center`}>
                 <div>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">{activeLesson.title}</h3>
-                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] mt-1">Lesson Video</p>
+                  <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-black' : 'text-white'} tracking-tight`}>{activeLesson.title}</h3>
+                  <p className={`text-[10px] ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'} font-black uppercase tracking-[0.2em] mt-1`}>Lesson Video</p>
                 </div>
                 <motion.button 
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleCloseModal}
-                  className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-red-400 transition-all shadow-xl"
+                  className={`w-12 h-12 rounded-lg ${theme === 'light' ? 'bg-gray-100 border-gray-200 text-gray-600' : 'bg-white/5 border-white/10 text-gray-400'} border flex items-center justify-center hover:text-red-400 transition-all shadow-xl`}
                 >
                   <X size={24} />
                 </motion.button>
@@ -300,11 +302,11 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
                 <div className="absolute inset-0 bg-blue-600/10 blur-[100px] pointer-events-none" />
               </div>
 
-              <div className="p-8 bg-white/5 flex justify-between items-center">
+              <div className={`p-8 ${theme === 'light' ? 'bg-gray-50' : 'bg-white/5'} flex justify-between items-center`}>
                 <motion.button 
                   whileHover={{ x: -5 }}
                   onClick={handleCloseModal}
-                  className="text-xs font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all flex items-center gap-3"
+                  className={`text-xs font-black uppercase tracking-widest ${theme === 'light' ? 'text-gray-500 hover:text-black' : 'text-gray-500 hover:text-white'} transition-all flex items-center gap-3`}
                 >
                   <ArrowLeft size={18} />
                   Back to Lessons
@@ -313,7 +315,7 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleNextLesson}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-500 text-white px-10 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:shadow-[0_10px_20px_rgba(37,99,235,0.3)] transition-all flex items-center gap-3"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-500 text-white px-10 py-4 rounded-lg text-xs font-black uppercase tracking-widest hover:shadow-[0_10px_20px_rgba(37,99,235,0.3)] transition-all flex items-center gap-3"
                 >
                   Next Lesson
                   <ArrowRight size={18} />
@@ -334,13 +336,13 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
         >
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 5 }}
-            className="w-16 h-16 bg-blue-600 text-white flex items-center justify-center rounded-2xl shadow-2xl border border-white/10"
+            className="w-16 h-16 bg-blue-600 text-white flex items-center justify-center rounded-none shadow-2xl border border-white/10"
           >
             <Star size={32} className="drop-shadow-lg" />
           </motion.div>
           <div>
-            <h1 className="text-4xl font-bold text-white tracking-tighter leading-tight">{course.title}</h1>
-            <p className="text-sm text-gray-400 font-medium opacity-80">Welcome to your learning adventure!</p>
+            <h1 className={`text-4xl font-bold ${theme === 'light' ? 'text-black' : 'text-white'} tracking-tighter leading-tight`}>{course.title}</h1>
+            <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} font-medium opacity-80`}>Welcome to your learning adventure!</p>
           </div>
         </motion.div>
 
@@ -348,7 +350,7 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-1 h-6 bg-blue-600 rounded-full" />
-            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-gray-500">Your Lessons</h2>
+            <h2 className={`text-sm font-black uppercase tracking-[0.2em] ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'}`}>Your Lessons</h2>
           </div>
           
           {chaptersData.map((chapter, chapterIdx) => (
@@ -357,28 +359,28 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: chapterIdx * 0.1 }}
-              className="bg-[#1a1d23]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] shadow-2xl overflow-hidden group"
+              className={`${theme === 'light' ? 'bg-white border-gray-200' : 'bg-[#1a1d23]/40 border-white/5'} backdrop-blur-xl border rounded-none shadow-2xl overflow-hidden group`}
             >
               <div className="p-8 flex items-start gap-8">
                 <motion.div 
                   whileHover={{ scale: 1.1 }}
-                  className={`w-14 h-14 ${chapter.color} rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-2xl border border-white/10`}
+                  className={`w-14 h-14 ${chapter.color} rounded-none flex items-center justify-center text-white flex-shrink-0 shadow-2xl border border-white/10`}
                 >
                   <GraduationCap size={28} />
                 </motion.div>
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-white tracking-tight">{chapter.title}</h3>
+                    <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-black' : 'text-white'} tracking-tight`}>{chapter.title}</h3>
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => toggleChapter(chapter.id)}
-                      className="bg-white/5 border border-white/10 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                      className={`${theme === 'light' ? 'bg-gray-100 border-gray-200 text-gray-600 hover:text-black hover:bg-gray-200' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'} border px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all`}
                     >
                       {openChapters.includes(chapter.id) ? 'Close' : 'Open'}
                     </motion.button>
                   </div>
-                  <p className="text-sm text-gray-400 leading-relaxed mb-6 font-medium opacity-80">
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} leading-relaxed mb-6 font-medium opacity-80`}>
                     {chapter.description}
                   </p>
 
@@ -390,34 +392,36 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
                         exit={{ height: 0, opacity: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="border-t border-white/5 pt-6 space-y-2">
+                        <div className={`border-t ${theme === 'light' ? 'border-gray-100' : 'border-white/5'} pt-6 space-y-2`}>
                           {chapter.lessons.map((lesson, index) => (
                             <motion.div 
                               key={lesson.id} 
-                              whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.05)" }}
+                              whileHover={theme === 'dark' ? { x: 10, backgroundColor: "rgba(255,255,255,0.05)" } : { x: 5 }}
                               onClick={() => handleSelectLesson(lesson)}
-                              className={`flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer group/lesson ${
-                                watchedLessons.includes(lesson.id) ? 'bg-emerald-500/5' : 'hover:bg-white/5'
+                              className={`flex items-center justify-between p-4 rounded-none transition-all cursor-pointer group/lesson ${
+                                watchedLessons.includes(lesson.id) 
+                                  ? (theme === 'light' ? 'bg-emerald-50' : 'bg-emerald-500/5') 
+                                  : (theme === 'light' ? 'hover:bg-gray-50' : 'hover:bg-white/5')
                               }`}
                             >
                               <div className="flex items-center gap-5">
-                                <span className="text-[10px] font-black text-gray-600 w-5">{index + 1}.</span>
+                                <span className={`text-[10px] font-black ${theme === 'light' ? 'text-gray-400' : 'text-gray-600'} w-5`}>{index + 1}.</span>
                                 {watchedLessons.includes(lesson.id) ? (
-                                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                  <div className="w-8 h-8 rounded-none bg-emerald-500/20 flex items-center justify-center text-emerald-400">
                                     <CheckCircle2 size={18} />
                                   </div>
                                 ) : (
-                                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover/lesson:text-blue-400 transition-colors">
+                                  <div className={`w-8 h-8 rounded-none ${theme === 'light' ? 'bg-gray-100' : 'bg-white/5'} flex items-center justify-center ${theme === 'light' ? 'text-gray-400 group-hover/lesson:text-blue-600' : 'text-gray-500 group-hover/lesson:text-blue-400'} transition-colors`}>
                                     <Play size={18} />
                                   </div>
                                 )}
-                                <span className={`text-sm font-bold ${watchedLessons.includes(lesson.id) ? 'text-emerald-400' : 'text-gray-300 group-hover/lesson:text-white'}`}>
+                                <span className={`text-sm font-bold ${watchedLessons.includes(lesson.id) ? 'text-emerald-500' : (theme === 'light' ? 'text-gray-700 group-hover/lesson:text-black' : 'text-gray-300 group-hover/lesson:text-white')}`}>
                                   {lesson.title}
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
-                                <Clock size={14} className="text-gray-600" />
-                                <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">{lesson.duration}</span>
+                                <Clock size={14} className={theme === 'light' ? 'text-gray-400' : 'text-gray-600'} />
+                                <span className={`text-[10px] font-black ${theme === 'light' ? 'text-gray-400' : 'text-gray-600'} uppercase tracking-widest`}>{lesson.duration}</span>
                               </div>
                             </motion.div>
                           ))}
@@ -439,22 +443,22 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#1a1d23]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 shadow-2xl group"
+          className={`${theme === 'light' ? 'bg-white border-gray-200' : 'bg-[#1a1d23]/40 border-white/5'} backdrop-blur-xl border rounded-none p-8 shadow-2xl group`}
         >
-          <h4 className="text-[10px] uppercase tracking-[0.2em] font-black text-blue-400 mb-6">Your Teacher</h4>
+          <h4 className="text-[10px] uppercase tracking-[0.2em] font-black text-blue-500 mb-6">Your Teacher</h4>
           <div className="flex items-center gap-5">
             <div className="relative">
-              <div className="absolute inset-0 bg-blue-600 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity" />
+              <div className={`absolute inset-0 bg-blue-600 rounded-full blur-md ${theme === 'light' ? 'opacity-10' : 'opacity-20'} group-hover:opacity-40 transition-opacity`} />
               <img 
                 src="https://i.pravatar.cc/150?u=teacher" 
                 alt="Teacher" 
-                className="w-14 h-14 rounded-full border-2 border-white/10 relative z-10"
+                className={`w-14 h-14 rounded-full border-2 ${theme === 'light' ? 'border-gray-100' : 'border-white/10'} relative z-10`}
                 referrerPolicy="no-referrer"
               />
             </div>
             <div>
-              <h5 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">Miss Sarah</h5>
-              <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-1">Primary Educator</p>
+              <h5 className={`text-base font-bold ${theme === 'light' ? 'text-black group-hover:text-blue-600' : 'text-white group-hover:text-blue-400'} transition-colors`}>Miss Sarah</h5>
+              <p className={`text-[10px] ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'} font-black uppercase tracking-widest mt-1`}>Primary Educator</p>
             </div>
           </div>
         </motion.div>
@@ -464,7 +468,7 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#1a1d23]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl"
+          className={`${theme === 'light' ? 'bg-white border-gray-200' : 'bg-[#1a1d23]/40 border-white/5'} backdrop-blur-xl border rounded-none overflow-hidden shadow-2xl`}
         >
           {[
             { name: 'Lessons', active: true },
@@ -473,9 +477,11 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
           ].map((item, i) => (
             <motion.button 
               key={item.name}
-              whileHover={{ x: 5, backgroundColor: "rgba(255,255,255,0.05)" }}
-              className={`w-full text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] transition-all border-b border-white/5 last:border-0 ${
-                item.active ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'
+              whileHover={theme === 'dark' ? { x: 5, backgroundColor: "rgba(255,255,255,0.05)" } : { x: 5 }}
+              className={`w-full text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] transition-all border-b ${theme === 'light' ? 'border-gray-100' : 'border-white/5'} last:border-0 ${
+                item.active 
+                  ? 'bg-blue-600 text-white shadow-lg' 
+                  : (theme === 'light' ? 'text-gray-500 hover:text-black' : 'text-gray-500 hover:text-white')
               }`}
             >
               {item.name}
@@ -488,16 +494,16 @@ export default function TakeCourse({ course, onBack, onTakeQuiz }: TakeCoursePro
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.7 }}
-          className="bg-gradient-to-br from-blue-600/20 to-indigo-600/20 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 shadow-2xl"
+          className={`${theme === 'light' ? 'bg-blue-50 border-blue-100' : 'bg-gradient-to-br from-blue-600/20 to-indigo-600/20 border-white/10'} backdrop-blur-xl border rounded-none p-8 shadow-2xl`}
         >
-          <h4 className="text-[10px] uppercase tracking-[0.2em] font-black text-white mb-4">Course Progress</h4>
+          <h4 className={`text-[10px] uppercase tracking-[0.2em] font-black ${theme === 'light' ? 'text-blue-600' : 'text-white'} mb-4`}>Course Progress</h4>
           <div className="flex items-end justify-between mb-2">
-            <span className="text-3xl font-bold text-white tracking-tighter">
+            <span className={`text-3xl font-bold ${theme === 'light' ? 'text-blue-700' : 'text-white'} tracking-tighter`}>
               {Math.round((watchedLessons.length / chaptersData.reduce((acc, c) => acc + c.lessons.length, 0)) * 100)}%
             </span>
-            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest pb-1">Great Job!</span>
+            <span className={`text-[10px] font-black ${theme === 'light' ? 'text-blue-600' : 'text-blue-400'} uppercase tracking-widest pb-1`}>Great Job!</span>
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className={`h-2 ${theme === 'light' ? 'bg-blue-200' : 'bg-white/10'} rounded-full overflow-hidden`}>
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${(watchedLessons.length / chaptersData.reduce((acc, c) => acc + c.lessons.length, 0)) * 100}%` }}

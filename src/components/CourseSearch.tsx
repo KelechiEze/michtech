@@ -24,7 +24,18 @@ const categories = [
   { name: 'Web Design', Icon: MousePointer2 },
 ];
 
-export default function CourseSearch() {
+interface CourseSearchProps {
+  onSearch?: (query: string) => void;
+  onCategoryClick?: (category: string) => void;
+}
+
+export default function CourseSearch({ onSearch, onCategoryClick }: CourseSearchProps) {
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const handleSearch = () => {
+    if (onSearch) onSearch(searchQuery);
+  };
+
   return (
     <section className="w-full bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -53,6 +64,8 @@ export default function CourseSearch() {
               <input 
                 type="text" 
                 placeholder="Course Name" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-white border-none px-4 py-4 text-sm italic text-gray-400 focus:ring-1 focus:ring-[#c5a070] outline-none shadow-sm"
               />
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 w-4 h-4" />
@@ -69,6 +82,7 @@ export default function CourseSearch() {
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={handleSearch}
               className="w-full border border-[#c5a070] text-[#c5a070] py-4 text-xs font-bold tracking-[0.2em] uppercase mt-4 hover:bg-[#c5a070] hover:text-white transition-all"
             >
               Search Course
@@ -85,6 +99,7 @@ export default function CourseSearch() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
+              onClick={() => onCategoryClick && onCategoryClick(cat.name)}
               className="aspect-square bg-[#1a1f2c] border-r border-b border-slate-800 flex flex-col items-center justify-center gap-6 group cursor-pointer hover:bg-[#c5a070] transition-colors duration-500"
             >
               <cat.Icon className="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Search, Filter, BookOpen, Star, Clock, ArrowRight, GraduationCap } from 'lucide-react';
 
@@ -68,10 +68,69 @@ const courses = [
     image: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?q=80&w=2070&auto=format&fit=crop',
     color: 'bg-indigo-50',
     accent: 'text-indigo-600'
+  },
+  {
+    id: 7,
+    title: 'Advanced Algebra',
+    category: 'Mathematics',
+    rating: 4.9,
+    students: '900',
+    duration: '12 Weeks',
+    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop',
+    color: 'bg-blue-50',
+    accent: 'text-blue-600'
+  },
+  {
+    id: 8,
+    title: 'Biology Basics',
+    category: 'Science',
+    rating: 4.8,
+    students: '1.1k',
+    duration: '6 Weeks',
+    image: 'https://images.unsplash.com/photo-1530210124550-912dc1381cb8?q=80&w=2070&auto=format&fit=crop',
+    color: 'bg-amber-50',
+    accent: 'text-amber-600'
+  },
+  {
+    id: 9,
+    title: 'Modern Literature',
+    category: 'English',
+    rating: 4.7,
+    students: '750',
+    duration: '8 Weeks',
+    image: 'https://images.unsplash.com/photo-1491841573634-28140fc7ced7?q=80&w=2070&auto=format&fit=crop',
+    color: 'bg-emerald-50',
+    accent: 'text-emerald-600'
   }
 ];
 
-export default function CoursesPage() {
+interface CoursesPageProps {
+  onNavigate?: (view: any) => void;
+}
+
+export default function CoursesPage({ onNavigate }: CoursesPageProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All Courses');
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => {
+      const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'All Courses' || course.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
+  const displayedCourses = filteredCourses.slice(0, visibleCount);
+
+  const handleLoadToggle = () => {
+    if (visibleCount < filteredCourses.length) {
+      setVisibleCount(filteredCourses.length);
+    } else {
+      setVisibleCount(6);
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen pb-24">
       {/* Hero Section */}
@@ -112,15 +171,24 @@ export default function CoursesPage() {
               <input 
                 type="text" 
                 placeholder="Search for a course..." 
-                className="w-full bg-gray-50 border-none px-12 py-4 rounded-xl text-sm focus:ring-2 focus:ring-[#c5a070] outline-none transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-gray-50 border-none px-12 py-4 rounded-none text-sm focus:ring-2 focus:ring-[#c5a070] outline-none transition-all"
               />
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5" />
             </div>
             
             <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-              <button className="bg-[#1a1f2c] text-white px-6 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">All Courses</button>
-              {['Mathematics', 'Science', 'English', 'Arts', 'History'].map((cat) => (
-                <button key={cat} className="bg-gray-50 text-gray-500 hover:bg-gray-100 px-6 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+              {['All Courses', 'Mathematics', 'Science', 'English', 'Art', 'History', 'Music'].map((cat) => (
+                <button 
+                  key={cat} 
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`${
+                    selectedCategory === cat 
+                      ? 'bg-[#1a1f2c] text-white' 
+                      : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                  } px-6 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap`}
+                >
                   {cat}
                 </button>
               ))}
@@ -137,7 +205,7 @@ export default function CoursesPage() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {courses.map((course, index) => (
+            {displayedCourses.map((course, index) => (
               <motion.div
                 key={course.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -146,7 +214,7 @@ export default function CoursesPage() {
                 viewport={{ once: true }}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-6">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-none mb-6">
                   <img 
                     src={course.image} 
                     alt={course.title} 
@@ -155,7 +223,7 @@ export default function CoursesPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute top-4 left-4">
-                    <span className={`${course.color} ${course.accent} px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm`}>
+                    <span className={`${course.color} ${course.accent} px-4 py-1.5 rounded-none text-[10px] font-bold uppercase tracking-widest shadow-sm`}>
                       {course.category}
                     </span>
                   </div>
@@ -189,17 +257,30 @@ export default function CoursesPage() {
             ))}
           </div>
           
-          <div className="mt-20 text-center">
-            <button className="border border-gray-200 px-12 py-5 text-xs font-bold tracking-widest text-slate-800 hover:bg-slate-50 transition-all uppercase rounded-full">
-              Load More Courses
-            </button>
-          </div>
+          {filteredCourses.length > 0 && (
+            <div className="mt-20 text-center">
+              <button 
+                onClick={handleLoadToggle}
+                className="border border-gray-200 px-12 py-5 text-xs font-bold tracking-widest text-slate-800 hover:bg-slate-50 transition-all uppercase rounded-full"
+              >
+                {visibleCount < filteredCourses.length ? 'Load More Courses' : 'Load Less Courses'}
+              </button>
+            </div>
+          )}
+
+          {filteredCourses.length === 0 && (
+            <div className="mt-20 text-center py-20 bg-gray-50 rounded-none">
+              <GraduationCap size={48} className="mx-auto text-gray-300 mb-4" />
+              <h3 className="text-xl font-serif text-slate-800">No courses found</h3>
+              <p className="text-gray-500">Try adjusting your search or filters.</p>
+            </div>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="bg-[#c5a070] rounded-[3rem] p-12 lg:p-24 relative overflow-hidden">
+        <div className="bg-[#c5a070] rounded-none p-12 lg:p-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl"></div>
           
@@ -210,7 +291,10 @@ export default function CoursesPage() {
                 Join Michtec Study Academy today and give your child the gift of interactive, fun, and effective education.
               </p>
             </div>
-            <button className="bg-[#1a1f2c] text-white px-12 py-6 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-2xl whitespace-nowrap">
+            <button 
+              onClick={() => onNavigate?.('login')}
+              className="bg-[#1a1f2c] text-white px-12 py-6 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-2xl whitespace-nowrap"
+            >
               Create Free Account
             </button>
           </div>
