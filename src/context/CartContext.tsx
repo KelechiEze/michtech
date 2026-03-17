@@ -5,17 +5,20 @@ interface Course {
   title: string;
   price: string;
   image: string;
-  instructor: string;
+  instructor?: string;
+  type?: 'course' | 'book';
+  format?: 'software' | 'hardware' | 'both';
 }
 
 interface CartItem extends Course {
   quantity: number;
+  type: 'course' | 'book';
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (course: Course) => void;
-  removeFromCart: (id: number) => void;
+  addToCart: (item: Course) => void;
+  removeFromCart: (id: number, format?: string) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -33,16 +36,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('michtec-cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (course: Course) => {
+  const addToCart = (item: Course) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === course.id);
+      const existing = prev.find(i => i.id === item.id && i.format === item.format);
       if (existing) return prev;
-      return [...prev, { ...course, quantity: 1 }];
+      return [...prev, { ...item, quantity: 1, type: item.type || 'course' }];
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+  const removeFromCart = (id: number, format?: string) => {
+    setCart(prev => prev.filter(item => !(item.id === id && item.format === format)));
   };
 
   const clearCart = () => setCart([]);

@@ -23,12 +23,14 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import CourseDetailPage from './components/CourseDetailPage';
 import EventDetailPage from './components/EventDetailPage';
+import BooksPage from './components/BooksPage';
+import OrderConfirmation from './components/OrderConfirmation';
 
 import CoursesPage from './components/CoursesPage';
 import EventsPage from './components/EventsPage';
 import ContactPage from './components/ContactPage';
 
-type View = 'landing' | 'login' | 'learner-dashboard' | 'teacher-dashboard' | 'courses' | 'events' | 'contact' | 'course-detail' | 'checkout' | 'event-detail';
+type View = 'landing' | 'login' | 'learner-dashboard' | 'teacher-dashboard' | 'courses' | 'events' | 'contact' | 'course-detail' | 'checkout' | 'event-detail' | 'books' | 'order-confirmation';
 
 export default function App() {
   const [view, setView] = useState<View>('landing');
@@ -37,6 +39,7 @@ export default function App() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [orderData, setOrderData] = useState<any>(null);
 
   useEffect(() => {
     // Simulate initial loading
@@ -56,6 +59,25 @@ export default function App() {
     setSelectedCourse(null);
     setSelectedEvent(null);
     setView('landing');
+    window.scrollTo(0, 0);
+  };
+
+  const handleBackToCourses = () => {
+    setSelectedPost(null);
+    setSelectedCourse(null);
+    setSelectedEvent(null);
+    setView('landing');
+    setTimeout(() => {
+      const element = document.getElementById('popular-courses');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const handleOrderComplete = (data: any) => {
+    setOrderData(data);
+    setView('order-confirmation');
     window.scrollTo(0, 0);
   };
 
@@ -109,7 +131,15 @@ export default function App() {
           ) : view === 'teacher-dashboard' ? (
             <TeacherDashboard onLogout={() => setView('login')} />
           ) : view === 'checkout' ? (
-            <Checkout onBack={() => setView('landing')} onSuccess={() => setView('landing')} />
+            <Checkout 
+              onBack={handleBackToCourses} 
+              onComplete={handleOrderComplete}
+            />
+          ) : view === 'order-confirmation' && orderData ? (
+            <OrderConfirmation 
+              order={orderData} 
+              onBackToHome={handleBackToHome} 
+            />
           ) : (
             <>
               <Navbar 
@@ -141,6 +171,8 @@ export default function App() {
                   <EventsPage onNavigate={handleNavigate} onEventClick={handleEventClick} />
                 ) : view === 'contact' ? (
                   <ContactPage />
+                ) : view === 'books' ? (
+                  <BooksPage onBack={handleBackToHome} />
                 ) : (
                   <>
                     <Hero />
@@ -175,6 +207,7 @@ export default function App() {
                   setIsCartOpen(false);
                   setView('checkout');
                 }} 
+                onBackToCourses={handleBackToCourses}
               />
             </>
           )}

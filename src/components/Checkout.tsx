@@ -5,37 +5,30 @@ import { useCart } from '../context/CartContext';
 
 interface CheckoutProps {
   onBack: () => void;
-  onSuccess: () => void;
+  onComplete: (orderData: any) => void;
 }
 
-export default function Checkout({ onBack, onSuccess }: CheckoutProps) {
+export default function Checkout({ onBack, onComplete }: CheckoutProps) {
   const { cart, totalPrice, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
 
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
     const parts = [];
 
     for (let i = 0, len = v.length; i < len; i += 4) {
       parts.push(v.substring(i, i + 4));
     }
 
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return v;
-    }
+    return parts.length ? parts.join(' ') : v;
   };
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatCardNumber(e.target.value);
-    if (formatted.length <= 19) { // 16 digits + 3 spaces
+    if (formatted.length <= 19) {
       setCardNumber(formatted);
     }
   };
@@ -61,40 +54,28 @@ export default function Checkout({ onBack, onSuccess }: CheckoutProps) {
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate payment
+    
+    // Simulate payment processing
     setTimeout(() => {
+      const transactionId = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      const orderData = {
+        transactionId,
+        items: [...cart],
+        total: totalPrice,
+        date: new Date().toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      };
+      
       setIsProcessing(false);
-      setIsSuccess(true);
       clearCart();
-      setTimeout(onSuccess, 3000);
+      onComplete(orderData);
     }, 2000);
   };
-
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <motion.div 
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="max-w-md w-full text-center"
-        >
-          <div className="w-20 h-20 bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-8">
-            <CheckCircle2 size={40} />
-          </div>
-          <h2 className="text-3xl font-serif text-slate-800 mb-4">Payment Successful!</h2>
-          <p className="text-gray-500 mb-8">Thank you for your purchase. You'll be redirected to your dashboard shortly.</p>
-          <div className="w-full h-1 bg-gray-100 overflow-hidden">
-            <motion.div 
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              transition={{ duration: 3 }}
-              className="w-full h-full bg-green-500"
-            />
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-20">
@@ -200,10 +181,12 @@ export default function Checkout({ onBack, onSuccess }: CheckoutProps) {
               <h3 className="text-xl font-serif text-slate-800 mb-6">Order Summary</h3>
               <div className="space-y-4 mb-8">
                 {cart.map(item => (
-                  <div key={item.id} className="flex justify-between items-start gap-4">
+                  <div key={`${item.id}-${item.format}`} className="flex justify-between items-start gap-4">
                     <div className="flex-1">
                       <p className="text-sm font-medium text-slate-800 line-clamp-1">{item.title}</p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{item.instructor}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                        {item.type === 'book' ? item.format : item.instructor}
+                      </p>
                     </div>
                     <span className="text-sm font-bold text-slate-800">{item.price}</span>
                   </div>

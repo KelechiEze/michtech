@@ -198,6 +198,16 @@ export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps
     }));
   };
 
+  const handleNotificationClick = (notification: any) => {
+    if (notification.title.includes('Enrollment')) {
+      setActiveView('student-progress');
+    } else if (notification.title.includes('Quiz')) {
+      setActiveView('student-progress');
+    } else if (notification.title.includes('Feedback')) {
+      setActiveView('my-courses');
+    }
+  };
+
   return (
     <DashboardLayout
       user={user}
@@ -212,6 +222,7 @@ export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps
       onLogout={onLogout}
       expandedMenus={expandedMenus}
       setExpandedMenus={setExpandedMenus}
+      onNotificationClick={handleNotificationClick}
     >
       {successMessage && (
         <motion.div 

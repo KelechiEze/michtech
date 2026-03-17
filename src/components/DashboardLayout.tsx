@@ -43,6 +43,7 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   expandedMenus: string[];
   setExpandedMenus: React.Dispatch<React.SetStateAction<string[]>>;
+  onNotificationClick?: (notification: Notification) => void;
 }
 
 export default function DashboardLayout({
@@ -54,7 +55,8 @@ export default function DashboardLayout({
   onLogout,
   children,
   expandedMenus,
-  setExpandedMenus
+  setExpandedMenus,
+  onNotificationClick
 }: DashboardLayoutProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -306,6 +308,10 @@ export default function DashboardLayout({
                       {notifications.length > 0 ? notifications.map(notification => (
                         <div 
                           key={notification.id} 
+                          onClick={() => {
+                            if (onNotificationClick) onNotificationClick(notification);
+                            setShowNotifications(false);
+                          }}
                           className={`p-5 border-b transition-all cursor-pointer group ${
                             theme === 'dark' 
                               ? `border-white/5 hover:bg-white/5 ${notification.unread ? 'bg-blue-500/5' : ''}` 

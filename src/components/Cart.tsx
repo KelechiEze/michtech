@@ -7,9 +7,10 @@ interface CartProps {
   isOpen: boolean;
   onClose: () => void;
   onCheckout: () => void;
+  onBackToCourses: () => void;
 }
 
-export default function Cart({ isOpen, onClose, onCheckout }: CartProps) {
+export default function Cart({ isOpen, onClose, onCheckout, onBackToCourses }: CartProps) {
   const { cart, removeFromCart, totalPrice, totalItems } = useCart();
 
   return (
@@ -49,7 +50,10 @@ export default function Cart({ isOpen, onClose, onCheckout }: CartProps) {
                   <h3 className="text-lg font-serif text-slate-800 mb-2">Your cart is empty</h3>
                   <p className="text-gray-400 text-sm mb-8">Looks like you haven't added any courses yet.</p>
                   <button 
-                    onClick={onClose}
+                    onClick={() => {
+                      onClose();
+                      onBackToCourses();
+                    }}
                     className="bg-[#c5a070] text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-[#b38f5f] transition-all"
                   >
                     Browse Courses
@@ -58,7 +62,7 @@ export default function Cart({ isOpen, onClose, onCheckout }: CartProps) {
               ) : (
                 <div className="space-y-6">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex gap-4 group">
+                    <div key={`${item.id}-${item.format}`} className="flex gap-4 group">
                       <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
                         <img 
                           src={item.image} 
@@ -70,12 +74,19 @@ export default function Cart({ isOpen, onClose, onCheckout }: CartProps) {
                       <div className="flex-1 flex flex-col justify-between py-1">
                         <div>
                           <h4 className="text-sm font-serif text-slate-800 mb-1 line-clamp-2">{item.title}</h4>
-                          <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{item.instructor}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                              {item.type === 'book' ? item.format : item.instructor}
+                            </p>
+                            {item.type === 'book' && (
+                              <span className="text-[8px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded font-bold uppercase">Book</span>
+                            )}
+                          </div>
                         </div>
                         <div className="flex justify-between items-end">
                           <span className="text-sm font-bold text-[#c5a070]">{item.price}</span>
                           <button 
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => removeFromCart(item.id, item.format)}
                             className="text-gray-300 hover:text-red-500 transition-colors"
                           >
                             <Trash2 size={16} />

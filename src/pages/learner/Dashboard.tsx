@@ -118,6 +118,16 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
     setActiveView('course-forum-thread');
   };
 
+  const handleNotificationClick = (notification: any) => {
+    if (notification.title.includes('Lesson')) {
+      setActiveView('courses');
+    } else if (notification.title.includes('Quiz')) {
+      setActiveView('take-quiz');
+    } else if (notification.title.includes('Forum')) {
+      setActiveView('course-forums');
+    }
+  };
+
   return (
     <DashboardLayout
       user={user}
@@ -134,6 +144,7 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
       onLogout={onLogout}
       expandedMenus={expandedMenus}
       setExpandedMenus={setExpandedMenus}
+      onNotificationClick={handleNotificationClick}
     >
       {activeView === 'dashboard' && (
         <div className="space-y-10 pb-12">

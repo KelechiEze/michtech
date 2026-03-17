@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 const navLinks = [
   { name: 'HOME', view: 'landing' },
   { name: 'COURSES', view: 'courses' },
+  { name: 'BOOKS', view: 'books' },
   { name: 'EVENTS', view: 'events' },
   { name: 'CONTACT', view: 'contact' },
 ];
