@@ -16,7 +16,8 @@ const courses = [
     description: 'A fun way for kids to learn basic math through games and interactive lessons.',
     rating: 4.8,
     duration: '4 weeks',
-    lessons: 12
+    lessons: 12,
+    type: 'book'
   },
   {
     id: 2,
@@ -31,7 +32,8 @@ const courses = [
     description: 'Discover the magic of science with safe and exciting experiments you can do at home.',
     rating: 4.9,
     duration: '6 weeks',
-    lessons: 18
+    lessons: 18,
+    type: 'course'
   },
   {
     id: 3,
@@ -46,7 +48,8 @@ const courses = [
     description: 'Improve reading skills and vocabulary through engaging stories and animated books.',
     rating: 4.7,
     duration: '3 weeks',
-    lessons: 9
+    lessons: 9,
+    type: 'book'
   },
   {
     id: 4,
@@ -61,7 +64,8 @@ const courses = [
     description: 'Unleash your child\'s creativity with fun art projects and color exploration.',
     rating: 4.6,
     duration: '5 weeks',
-    lessons: 15
+    lessons: 15,
+    type: 'course'
   },
   {
     id: 5,
@@ -76,12 +80,14 @@ const courses = [
     description: 'Learn the basics of programming by creating your own games and animations with Scratch.',
     rating: 4.9,
     duration: '8 weeks',
-    lessons: 24
+    lessons: 24,
+    type: 'course'
   },
   {
     id: 6,
     title: 'Music & Rhythm: Piano Basics',
     instructor: 'Miss Clara',
+    instructor_title: 'Miss Clara',
     image: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?q=80&w=2070&auto=format&fit=crop',
     avatar: 'https://i.pravatar.cc/150?u=clara',
     students: 60,
@@ -91,7 +97,8 @@ const courses = [
     description: 'Start your musical journey with basic piano lessons and rhythm exercises.',
     rating: 4.5,
     duration: '10 weeks',
-    lessons: 20
+    lessons: 20,
+    type: 'book'
   },
   {
     id: 7,
@@ -106,7 +113,8 @@ const courses = [
     description: 'Travel the world from your home and learn about different cultures and landmarks.',
     rating: 4.7,
     duration: '4 weeks',
-    lessons: 12
+    lessons: 12,
+    type: 'course'
   },
   {
     id: 8,
@@ -121,7 +129,8 @@ const courses = [
     description: 'Explore the wonders of the universe, from our solar system to distant galaxies.',
     rating: 4.9,
     duration: '6 weeks',
-    lessons: 18
+    lessons: 18,
+    type: 'book'
   }
 ];
 

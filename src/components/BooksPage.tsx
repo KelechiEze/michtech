@@ -163,7 +163,8 @@ export default function BooksPage({ onBack }: BooksPageProps) {
                     <motion.div 
                       key={book.id}
                       whileHover={{ y: -10 }}
-                      className="flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border border-gray-100"
+                      onClick={() => setSelectedBook(book)}
+                      className="flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border border-gray-100 cursor-pointer"
                     >
                       <div className="relative h-80 overflow-hidden">
                         <img 
