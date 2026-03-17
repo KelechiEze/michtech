@@ -176,9 +176,10 @@ export default function BooksPage({ onBack }: BooksPageProps) {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                           <button 
                             onClick={() => setSelectedBook(book)}
-                            className="w-full bg-white text-slate-800 py-3 rounded-xl text-xs font-bold tracking-widest uppercase hover:bg-[#c5a070] hover:text-white transition-all"
+                            className="w-full bg-white text-slate-800 py-3 rounded-xl text-xs font-bold tracking-widest uppercase hover:bg-[#c5a070] hover:text-white transition-all flex items-center justify-center gap-2"
                           >
-                            Quick View
+                            <ShoppingCart size={14} />
+                            Add to Cart
                           </button>
                         </div>
                       </div>
@@ -229,9 +230,9 @@ export default function BooksPage({ onBack }: BooksPageProps) {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row"
+              className="relative bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row"
             >
-              <div className="w-full md:w-2/5 h-64 md:h-auto">
+              <div className="w-full md:w-2/5 h-48 md:h-auto overflow-hidden bg-gray-100">
                 <img 
                   src={selectedBook.image} 
                   alt={selectedBook.title} 
@@ -239,11 +240,12 @@ export default function BooksPage({ onBack }: BooksPageProps) {
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="w-full md:w-3/5 p-8">
+              <div className="w-full md:w-3/5 p-6 md:p-8 overflow-y-auto custom-scrollbar flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <span className="text-[10px] uppercase tracking-widest font-bold text-[#c5a070] mb-1 block">{selectedBook.class}</span>
                     <h2 className="text-2xl font-serif text-slate-800">{selectedBook.title}</h2>
+                    <p className="text-xs text-gray-400 mt-1">by {selectedBook.author}</p>
                   </div>
                   <button onClick={() => setSelectedBook(null)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <ArrowLeft size={20} className="text-gray-400" />
@@ -255,60 +257,92 @@ export default function BooksPage({ onBack }: BooksPageProps) {
                 </p>
 
                 <div className="space-y-4 mb-8">
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-slate-800">Choose Format</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-slate-800">Choose Purchase Format</h4>
+                  <div className="grid grid-cols-1 gap-3">
                     <button 
                       onClick={() => setPurchaseFormat('software')}
-                      className={`p-4 rounded-2xl border-2 transition-all text-left relative ${
+                      className={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${
                         purchaseFormat === 'software' ? 'border-[#c5a070] bg-[#c5a070]/5' : 'border-gray-100 hover:border-gray-200'
                       }`}
                     >
-                      {purchaseFormat === 'software' && <Check className="absolute top-2 right-2 text-[#c5a070]" size={16} />}
-                      <span className="block font-bold text-slate-800 mb-1">Soft Copy</span>
-                      <span className="block text-[10px] text-gray-500">PDF Download</span>
-                      <span className="block mt-2 font-bold text-[#c5a070]">£{selectedBook.price.toFixed(2)}</span>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                          purchaseFormat === 'software' ? 'bg-[#c5a070] text-white' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          <Book size={20} />
+                        </div>
+                        <div>
+                          <span className="block font-bold text-slate-800">Soft Copy</span>
+                          <span className="block text-[10px] text-gray-500">Instant PDF Download</span>
+                        </div>
+                      </div>
+                      <span className="font-bold text-[#c5a070]">£{selectedBook.price.toFixed(2)}</span>
                     </button>
+
                     <button 
                       onClick={() => setPurchaseFormat('hardware')}
-                      className={`p-4 rounded-2xl border-2 transition-all text-left relative ${
+                      className={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${
                         purchaseFormat === 'hardware' ? 'border-[#c5a070] bg-[#c5a070]/5' : 'border-gray-100 hover:border-gray-200'
                       }`}
                     >
-                      {purchaseFormat === 'hardware' && <Check className="absolute top-2 right-2 text-[#c5a070]" size={16} />}
-                      <span className="block font-bold text-slate-800 mb-1">Hard Copy</span>
-                      <span className="block text-[10px] text-gray-500">Physical Book</span>
-                      <span className="block mt-2 font-bold text-[#c5a070]">£{selectedBook.price.toFixed(2)}</span>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                          purchaseFormat === 'hardware' ? 'bg-[#c5a070] text-white' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          <ShoppingCart size={20} />
+                        </div>
+                        <div>
+                          <span className="block font-bold text-slate-800">Hard Copy</span>
+                          <span className="block text-[10px] text-gray-500">Physical Book Delivery</span>
+                        </div>
+                      </div>
+                      <span className="font-bold text-[#c5a070]">£{selectedBook.price.toFixed(2)}</span>
                     </button>
+
                     <button 
                       onClick={() => setPurchaseFormat('both')}
-                      className={`p-4 rounded-2xl border-2 transition-all text-left relative ${
+                      className={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${
                         purchaseFormat === 'both' ? 'border-[#c5a070] bg-[#c5a070]/5' : 'border-gray-100 hover:border-gray-200'
                       }`}
                     >
-                      {purchaseFormat === 'both' && <Check className="absolute top-2 right-2 text-[#c5a070]" size={16} />}
-                      <span className="block font-bold text-slate-800 mb-1">Both</span>
-                      <span className="block text-[10px] text-gray-500">Soft + Hard</span>
-                      <span className="block mt-2 font-bold text-[#c5a070]">£{(selectedBook.price * 2).toFixed(2)}</span>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                          purchaseFormat === 'both' ? 'bg-[#c5a070] text-white' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          <div className="relative">
+                            <Book size={16} className="absolute -top-1 -left-1" />
+                            <ShoppingCart size={16} className="absolute -bottom-1 -right-1" />
+                          </div>
+                        </div>
+                        <div>
+                          <span className="block font-bold text-slate-800">Both Formats</span>
+                          <span className="block text-[10px] text-gray-500">PDF + Physical Copy</span>
+                        </div>
+                      </div>
+                      <span className="font-bold text-[#c5a070]">£{(selectedBook.price * 2).toFixed(2)}</span>
                     </button>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-xl mb-8">
-                  <Info size={16} className="text-blue-500 flex-shrink-0" />
-                  <p className="text-[10px] text-blue-700 leading-tight">
+                <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-2xl mb-8">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <Info size={16} className="text-blue-600" />
+                  </div>
+                  <p className="text-[11px] text-blue-700 leading-tight">
                     {purchaseFormat === 'software' 
-                      ? "You'll be able to download the PDF immediately after purchase." 
+                      ? "Get instant access to the digital version. You can download it immediately after checkout." 
                       : purchaseFormat === 'hardware'
-                      ? "Physical copies will be available for pickup at the school office."
-                      : "You get both the physical book and the PDF download."}
+                      ? "The physical book will be prepared for collection or delivery within 2-3 business days."
+                      : "Best value! Get the physical book for your library and the digital version for on-the-go study."}
                   </p>
                 </div>
 
                 <button 
                   onClick={() => handleAddToCart(selectedBook)}
-                  className="w-full bg-slate-800 text-white py-4 rounded-xl text-xs font-bold tracking-widest uppercase hover:bg-slate-700 transition-all shadow-lg"
+                  className="w-full bg-[#c5a070] text-white py-5 rounded-2xl text-sm font-bold tracking-widest uppercase hover:bg-[#b38f5f] transition-all shadow-lg shadow-[#c5a070]/20 flex items-center justify-center gap-3 mt-auto"
                 >
-                  Add to Cart
+                  <ShoppingCart size={18} />
+                  Add to Cart • £{purchaseFormat === 'both' ? (selectedBook.price * 2).toFixed(2) : selectedBook.price.toFixed(2)}
                 </button>
               </div>
             </motion.div>
