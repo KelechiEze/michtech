@@ -15,12 +15,16 @@ import {
   CheckCircle2,
   X,
   ChevronDown,
-  ArrowLeft
+  ArrowLeft,
+  Video
 } from 'lucide-react';
 import DashboardLayout, { SidebarItem } from '../../components/DashboardLayout';
 import TeacherForums from './components/TeacherForums';
 import TeacherForumThread from './components/TeacherForumThread';
+import LiveClassPage from '../../components/live-classroom/LiveClassPage';
+import LiveClassRoom from '../../components/live-classroom/LiveClassRoom';
 import { useTheme } from '../../context/ThemeContext';
+import { useLiveClasses } from '../../context/LiveClassContext';
 
 // Mock data for teachers
 const studentProgress = [
@@ -64,11 +68,13 @@ interface NewChapter {
 
 export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps) {
   const { theme } = useTheme();
-  const [activeView, setActiveView] = useState<'dashboard' | 'create-course' | 'student-progress' | 'create-quiz' | 'profile' | 'my-courses' | 'student-detail' | 'teacher-forums' | 'teacher-forum-thread'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'create-course' | 'student-progress' | 'create-quiz' | 'profile' | 'my-courses' | 'student-detail' | 'teacher-forums' | 'teacher-forum-thread' | 'live-classes' | 'live-classroom'>('dashboard');
   const [expandedMenus, setExpandedMenus] = useState<string[]>(['courses']);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [selectedThread, setSelectedThread] = useState<any>(null);
+  const [selectedLiveClass, setSelectedLiveClass] = useState<string | null>(null);
+  const { classes: liveClasses, updateClass } = useLiveClasses();
 
   // Quiz Builder State
   const [quizTitle, setQuizTitle] = useState('');
@@ -104,6 +110,7 @@ export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps
         { name: 'Create Quiz', view: 'create-quiz' },
       ]
     },
+    { name: 'Live Classes', view: 'live-classes', icon: Video },
     { name: 'Teachers Forum', view: 'teacher-forums', icon: MessageSquare },
     { name: 'Teacher Profile', view: 'profile', icon: User }
   ];
@@ -207,6 +214,30 @@ export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps
       setActiveView('my-courses');
     }
   };
+
+  const handleStartClass = (classId: string) => {
+    updateClass(classId, { status: 'live' });
+    setSelectedLiveClass(classId);
+    setActiveView('live-classroom');
+  };
+
+  if (activeView === 'live-classroom') {
+    const cls = liveClasses.find(c => c.id === selectedLiveClass);
+    return (
+      <LiveClassRoom 
+        role="teacher" 
+        classTitle={cls?.title || 'Live Classroom'} 
+        status={cls?.status as any || 'live'}
+        startTime={cls?.startTime}
+        onLeave={() => {
+          if (selectedLiveClass) {
+            updateClass(selectedLiveClass, { status: 'ended' });
+          }
+          setActiveView('live-classes');
+        }} 
+      />
+    );
+  }
 
   return (
     <DashboardLayout
@@ -1082,6 +1113,13 @@ export default function TeacherDashboardPage({ onLogout }: TeacherDashboardProps
         <TeacherForumThread 
           topic={selectedThread} 
           onBack={() => setActiveView('teacher-forums')} 
+        />
+      )}
+
+      {activeView === 'live-classes' && (
+        <LiveClassPage 
+          role="teacher" 
+          onStartClass={handleStartClass} 
         />
       )}
 

@@ -19,6 +19,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Post, UserRole } from './types';
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
+import { LiveClassProvider } from './context/LiveClassContext';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import CourseDetailPage from './components/CourseDetailPage';
@@ -120,98 +121,100 @@ export default function App() {
   return (
     <ThemeProvider>
       <CartProvider>
-        <div className="min-h-screen bg-white font-sans selection:bg-[#c5a070] selection:text-white">
-          <AnimatePresence>
-            {loading && <Preloader />}
-          </AnimatePresence>
+        <LiveClassProvider>
+          <div className="min-h-screen bg-white font-sans selection:bg-[#c5a070] selection:text-white">
+            <AnimatePresence>
+              {loading && <Preloader />}
+            </AnimatePresence>
 
-          {/* Dashboards don't show standard navbar/footer */}
-          {view === 'learner-dashboard' ? (
-            <LearnerDashboard onLogout={() => setView('login')} />
-          ) : view === 'teacher-dashboard' ? (
-            <TeacherDashboard onLogout={() => setView('login')} />
-          ) : view === 'checkout' ? (
-            <Checkout 
-              onBack={handleBackToCourses} 
-              onComplete={handleOrderComplete}
-            />
-          ) : view === 'order-confirmation' && orderData ? (
-            <OrderConfirmation 
-              order={orderData} 
-              onBackToHome={handleBackToHome} 
-            />
-          ) : (
-            <>
-              <Navbar 
-                onHomeClick={handleBackToHome} 
-                onGetStartedClick={handleGetStarted} 
-                onNavigate={handleNavigate}
-                onCartClick={() => setIsCartOpen(true)}
-                activeView={view}
+            {/* Dashboards don't show standard navbar/footer */}
+            {view === 'learner-dashboard' ? (
+              <LearnerDashboard onLogout={() => setView('login')} />
+            ) : view === 'teacher-dashboard' ? (
+              <TeacherDashboard onLogout={() => setView('login')} />
+            ) : view === 'checkout' ? (
+              <Checkout 
+                onBack={handleBackToCourses} 
+                onComplete={handleOrderComplete}
               />
-              <main>
-                {selectedPost ? (
-                  <BlogPage post={selectedPost} onBack={() => setSelectedPost(null)} />
-                ) : view === 'course-detail' ? (
-                  <CourseDetailPage 
-                    course={selectedCourse} 
-                    onBack={() => setView('landing')} 
-                    onLoginClick={handleGetStarted} 
-                  />
-                ) : view === 'event-detail' ? (
-                  <EventDetailPage 
-                    event={selectedEvent} 
-                    onBack={() => setView('events')} 
-                  />
-                ) : view === 'login' ? (
-                  <LoginPage onLogin={handleLogin} onBack={handleBackToHome} />
-                ) : view === 'courses' ? (
-                  <CoursesPage onNavigate={handleNavigate} />
-                ) : view === 'events' ? (
-                  <EventsPage onNavigate={handleNavigate} onEventClick={handleEventClick} />
-                ) : view === 'contact' ? (
-                  <ContactPage />
-                ) : view === 'books' ? (
-                  <BooksPage onBack={handleBackToHome} />
-                ) : (
-                  <>
-                    <Hero />
-                    <CourseSearch 
-                      onSearch={() => setView('login')} 
-                      onCategoryClick={() => setView('login')} 
+            ) : view === 'order-confirmation' && orderData ? (
+              <OrderConfirmation 
+                order={orderData} 
+                onBackToHome={handleBackToHome} 
+              />
+            ) : (
+              <>
+                <Navbar 
+                  onHomeClick={handleBackToHome} 
+                  onGetStartedClick={handleGetStarted} 
+                  onNavigate={handleNavigate}
+                  onCartClick={() => setIsCartOpen(true)}
+                  activeView={view}
+                />
+                <main>
+                  {selectedPost ? (
+                    <BlogPage post={selectedPost} onBack={() => setSelectedPost(null)} />
+                  ) : view === 'course-detail' ? (
+                    <CourseDetailPage 
+                      course={selectedCourse} 
+                      onBack={() => setView('landing')} 
+                      onLoginClick={handleGetStarted} 
                     />
-                    <PopularCourses onCourseClick={handleCourseClick} />
-                    <WhyChooseUs />
-                    <YouCanLearn />
-                    <BlogNews onReadMore={handleReadMore} />
-                    <HistoryContact />
-                    {/* Extra content to make it feel like a landing page */}
-                    <section className="py-24 bg-gray-50">
-                      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-4xl lg:text-5xl font-serif text-slate-800 mb-6">Fun Learning for Every Child</h2>
-                        <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                          We provide a safe and happy place where children can learn through play and discovery. 
-                          Our fun lessons and friendly teachers help every child reach for the stars!
-                        </p>
-                      </div>
-                    </section>
-                  </>
-                )}
-              </main>
-              <Footer onNavigate={handleNavigate} onLogin={handleGetStarted} />
-              <ScrollToTop />
-              <Cart 
-                isOpen={isCartOpen} 
-                onClose={() => setIsCartOpen(false)} 
-                onCheckout={() => {
-                  setIsCartOpen(false);
-                  setView('checkout');
-                }} 
-                onBackToCourses={handleBackToCourses}
-              />
-            </>
-          )}
-        </div>
+                  ) : view === 'event-detail' ? (
+                    <EventDetailPage 
+                      event={selectedEvent} 
+                      onBack={() => setView('events')} 
+                    />
+                  ) : view === 'login' ? (
+                    <LoginPage onLogin={handleLogin} onBack={handleBackToHome} />
+                  ) : view === 'courses' ? (
+                    <CoursesPage onNavigate={handleNavigate} />
+                  ) : view === 'events' ? (
+                    <EventsPage onNavigate={handleNavigate} onEventClick={handleEventClick} />
+                  ) : view === 'contact' ? (
+                    <ContactPage />
+                  ) : view === 'books' ? (
+                    <BooksPage onBack={handleBackToHome} />
+                  ) : (
+                    <>
+                      <Hero />
+                      <CourseSearch 
+                        onSearch={() => setView('login')} 
+                        onCategoryClick={() => setView('login')} 
+                      />
+                      <PopularCourses onCourseClick={handleCourseClick} />
+                      <WhyChooseUs />
+                      <YouCanLearn />
+                      <BlogNews onReadMore={handleReadMore} />
+                      <HistoryContact />
+                      {/* Extra content to make it feel like a landing page */}
+                      <section className="py-24 bg-gray-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                          <h2 className="text-4xl lg:text-5xl font-serif text-slate-800 mb-6">Fun Learning for Every Child</h2>
+                          <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                            We provide a safe and happy place where children can learn through play and discovery. 
+                            Our fun lessons and friendly teachers help every child reach for the stars!
+                          </p>
+                        </div>
+                      </section>
+                    </>
+                  )}
+                </main>
+                <Footer onNavigate={handleNavigate} onLogin={handleGetStarted} />
+                <ScrollToTop />
+                <Cart 
+                  isOpen={isCartOpen} 
+                  onClose={() => setIsCartOpen(false)} 
+                  onCheckout={() => {
+                    setIsCartOpen(false);
+                    setView('checkout');
+                  }} 
+                  onBackToCourses={handleBackToCourses}
+                />
+              </>
+            )}
+          </div>
+        </LiveClassProvider>
       </CartProvider>
     </ThemeProvider>
   );

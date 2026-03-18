@@ -10,6 +10,7 @@ import {
   Clock,
   Volume2,
   PlayCircle,
+  Video,
   LucideIcon
 } from 'lucide-react';
 import DashboardLayout, { SidebarItem } from '../../components/DashboardLayout';
@@ -22,7 +23,10 @@ import CourseForums from './components/CourseForums';
 import CourseForumThread from './components/CourseForumThread';
 import TakeQuiz from './components/TakeQuiz';
 import AccountSettings from '../../components/AccountSettings';
+import LiveClassPage from '../../components/live-classroom/LiveClassPage';
+import LiveClassRoom from '../../components/live-classroom/LiveClassRoom';
 import { useTheme } from '../../context/ThemeContext';
+import { useLiveClasses } from '../../context/LiveClassContext';
 
 interface Course {
   id: number;
@@ -67,9 +71,11 @@ interface LearnerDashboardProps {
 
 export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps) {
   const { theme } = useTheme();
-  const [activeView, setActiveView] = useState<'dashboard' | 'courses' | 'course-list' | 'my-courses' | 'course-detail' | 'take-course' | 'course-forums' | 'course-forum-thread' | 'take-quiz' | 'account'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'courses' | 'course-list' | 'my-courses' | 'course-detail' | 'take-course' | 'course-forums' | 'course-forum-thread' | 'take-quiz' | 'account' | 'live-classes' | 'live-classroom'>('dashboard');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedThread, setSelectedThread] = useState<ForumTopic | null>(null);
+  const [selectedLiveClass, setSelectedLiveClass] = useState<string | null>(null);
+  const { classes: liveClasses } = useLiveClasses();
   const [expandedMenus, setExpandedMenus] = useState<string[]>(['courses']);
 
   const user = {
@@ -95,6 +101,7 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
         { name: 'Fun Quiz', view: 'take-quiz' }
       ]
     },
+    { name: 'Live Classes', view: 'live-classes', icon: Video },
     { name: 'My Profile', view: 'account', icon: User }
   ];
 
@@ -118,6 +125,11 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
     setActiveView('course-forum-thread');
   };
 
+  const handleJoinClass = (classId: string) => {
+    setSelectedLiveClass(classId);
+    setActiveView('live-classroom');
+  };
+
   const handleNotificationClick = (notification: any) => {
     if (notification.title.includes('Lesson')) {
       setActiveView('courses');
@@ -127,6 +139,19 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
       setActiveView('course-forums');
     }
   };
+
+  if (activeView === 'live-classroom') {
+    const cls = liveClasses.find(c => c.id === selectedLiveClass);
+    return (
+      <LiveClassRoom 
+        role="student" 
+        classTitle={cls?.title || 'Live Classroom'} 
+        status={cls?.status as any || 'live'}
+        startTime={cls?.startTime}
+        onLeave={() => setActiveView('live-classes')} 
+      />
+    );
+  }
 
   return (
     <DashboardLayout
@@ -387,6 +412,12 @@ export default function LearnerDashboardPage({ onLogout }: LearnerDashboardProps
         <TakeQuiz 
           course={selectedCourse} 
           onBack={() => setActiveView('take-course')} 
+        />
+      )}
+      {activeView === 'live-classes' && (
+        <LiveClassPage 
+          role="learner" 
+          onJoinClass={handleJoinClass} 
         />
       )}
       {activeView === 'account' && <AccountSettings />}
